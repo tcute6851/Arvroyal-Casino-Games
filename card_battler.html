@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚔️ Card Battler – Arvroyal Casino</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ─── RESET & BASE ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background: #0b0719;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(120, 40, 200, 0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(200, 150, 30, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 100%, rgba(80, 20, 140, 0.20) 0%, transparent 50%),
+                #0b0719;
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            animation: orbFloat 12s ease-in-out infinite alternate;
+        }
+        .orb--1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #b8860b, transparent 70%);
+            top: -100px;
+            right: -100px;
+        }
+        .orb--2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #7c3aed, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: 4s;
+            opacity: 0.2;
+        }
+        .orb--3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #f59e0b, transparent 70%);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 8s;
+            opacity: 0.15;
+        }
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 14px 22px 30px;
+            min-height: 100vh;
+            background: rgba(15, 12, 35, 0.78);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            border-left: 1px solid rgba(255, 215, 0, 0.06);
+            border-right: 1px solid rgba(255, 215, 0, 0.06);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 168, 71, 0.15);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 168, 71, 0.25);
+        }
+        ::selection {
+            background: rgba(212, 168, 71, 0.2);
+        }
+
+        /* ─── NAVBAR ─── */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0 14px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.06);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brand i {
+            -webkit-text-fill-color: initial;
+            color: #fbbf24;
+        }
+        .brand .live-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34d399;
+            margin-left: 5px;
+            animation: live-pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes live-pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.8);
+                box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+            }
+        }
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav-links a:hover {
+            color: #fbbf24;
+        }
+        .nav-links a.active {
+            color: #fbbf24;
+        }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fbbf24;
+            border-radius: 2px;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 0.8rem;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.12);
+            border: 2px solid rgba(255, 215, 0, 0.12);
+            flex-shrink: 0;
+        }
+        .user-details h4 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .user-details span {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .user-details span i {
+            color: #fbbf24;
+            margin-right: 3px;
+        }
+        .balance-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 12px 3px 8px;
+            border-radius: 100px;
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.08);
+            color: #fbbf24;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: default;
+        }
+        .balance-display i {
+            font-size: 0.65rem;
+            opacity: 0.7;
+        }
+        .balance-display .balance-amount {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        .balance-display .currency {
+            font-size: 0.55rem;
+            opacity: 0.5;
+        }
+        .btn-logout {
+            padding: 5px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+        }
+        .btn-logout i {
+            font-size: 0.75rem;
+        }
+        .db-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .db-status i {
+            font-size: 0.45rem;
+        }
+        .db-status.online i {
+            color: #34d399;
+        }
+        .db-status.offline i {
+            color: #f87171;
+        }
+        .db-status .status-label {
+            color: rgba(255, 255, 255, 0.12);
+        }
+        .db-status .status-value {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ─── GAME HEADER ─── */
+        .game-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .game-header h1 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-header h1 i {
+            -webkit-text-fill-color: initial;
+            color: #fbbf24;
+        }
+        .game-header .game-stats {
+            display: flex;
+            gap: 14px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.25);
+            flex-wrap: wrap;
+        }
+        .game-header .game-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .game-header .game-stats i {
+            color: #fbbf24;
+        }
+        .game-header .game-stats .stat-val {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* ─── TAB BAR ─── */
+        .tab-bar {
+            display: flex;
+            gap: 3px;
+            margin: 6px 0 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 3px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 8px 18px;
+            border-radius: 11px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.25);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+        .tab-btn:hover {
+            color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(184, 134, 11, 0.05));
+            color: #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.05);
+        }
+        .tab-btn i {
+            font-size: 0.8rem;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeSlide 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── COLLECTION ─── */
+        .collection-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .collection-toolbar .filter-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .collection-toolbar .filter-group select,
+        .collection-toolbar .filter-group input {
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: 0.3s;
+        }
+        .collection-toolbar .filter-group select:focus,
+        .collection-toolbar .filter-group input:focus {
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+        .collection-toolbar .filter-group select option {
+            background: #1a1435;
+        }
+        .collection-toolbar .collection-count {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+        }
+        .card-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 18px;
+            padding: 14px 12px 12px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            position: relative;
+            text-align: center;
+        }
+        .card-item:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 215, 0, 0.10);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        .card-item .card-image-wrap {
+            position: relative;
+            width: 100%;
+            height: 130px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .card-item .card-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .card-item:hover .card-image-wrap img {
+            transform: scale(1.04);
+        }
+        .card-item .card-image-wrap .card-type-icon {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .card-item .card-rarity {
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 10px;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        .card-item .card-name {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+            margin: 2px 0;
+        }
+        .card-item .card-type {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 4px;
+        }
+        .card-item .card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px 8px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.35);
+            margin: 4px 0;
+        }
+        .card-item .card-stats span {
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-item .card-stats .stat-val {
+            color: #fff;
+            font-weight: 600;
+        }
+        .card-item .card-level {
+            font-size: 0.55rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-top: 2px;
+        }
+        .card-item .card-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .card-item .card-actions button {
+            padding: 3px 12px;
+            border-radius: 100px;
+            border: none;
+            font-size: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .card-item .card-actions .btn-select {
+            background: rgba(255, 215, 0, 0.06);
+            color: rgba(255, 215, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.06);
+        }
+        .card-item .card-actions .btn-select:hover {
+            background: rgba(255, 215, 0, 0.12);
+        }
+        .card-item .card-actions .btn-select.selected {
+            background: #fbbf24;
+            color: #0b0719;
+            border-color: #fbbf24;
+        }
+        .card-item .card-actions .btn-select:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .card-item .card-actions .btn-upgrade {
+            background: rgba(52, 211, 153, 0.06);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.06);
+        }
+        .card-item .card-actions .btn-upgrade:hover {
+            background: rgba(52, 211, 153, 0.14);
+        }
+        .card-item .card-actions .btn-upgrade:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        /* Rarity colors */
+        .rarity-COMMON {
+            color: #8a8a8a;
+            border-color: #8a8a8a40;
+        }
+        .rarity-UNCOMMON {
+            color: #5b9e6b;
+            border-color: #5b9e6b40;
+        }
+        .rarity-RARE {
+            color: #4a8fd4;
+            border-color: #4a8fd440;
+        }
+        .rarity-EPIC {
+            color: #9b5fc0;
+            border-color: #9b5fc040;
+        }
+        .rarity-ANCIENT {
+            color: #d4a04a;
+            border-color: #d4a04a40;
+        }
+        .rarity-DRAGON {
+            color: #d45a4a;
+            border-color: #d45a4a40;
+        }
+        .rarity-LEGENDARY {
+            color: #ff6b35;
+            border-color: #ff6b3540;
+        }
+        .rarity-TITAN {
+            color: #ffd700;
+            border-color: #ffd70040;
+        }
+        .rarity-IMMORTAL {
+            color: #ff2d55;
+            border-color: #ff2d5540;
+        }
+
+        .card-item .card-rarity.rarity-COMMON {
+            background: #8a8a8a10;
+            border-color: #8a8a8a30;
+        }
+        .card-item .card-rarity.rarity-UNCOMMON {
+            background: #5b9e6b10;
+            border-color: #5b9e6b30;
+        }
+        .card-item .card-rarity.rarity-RARE {
+            background: #4a8fd410;
+            border-color: #4a8fd430;
+        }
+        .card-item .card-rarity.rarity-EPIC {
+            background: #9b5fc010;
+            border-color: #9b5fc030;
+        }
+        .card-item .card-rarity.rarity-ANCIENT {
+            background: #d4a04a10;
+            border-color: #d4a04a30;
+        }
+        .card-item .card-rarity.rarity-DRAGON {
+            background: #d45a4a10;
+            border-color: #d45a4a30;
+        }
+        .card-item .card-rarity.rarity-LEGENDARY {
+            background: #ff6b3510;
+            border-color: #ff6b3530;
+        }
+        .card-item .card-rarity.rarity-TITAN {
+            background: #ffd70010;
+            border-color: #ffd70030;
+        }
+        .card-item .card-rarity.rarity-IMMORTAL {
+            background: #ff2d5510;
+            border-color: #ff2d5530;
+        }
+
+        .no-cards {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255, 255, 255, 0.10);
+        }
+        .no-cards i {
+            font-size: 2.6rem;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.3;
+        }
+        .no-cards .empty-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .no-cards .empty-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ─── STORE ─── */
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .store-header p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .store-header p i {
+            color: #fbbf24;
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 14px;
+        }
+        .store-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 18px;
+            padding: 18px 14px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .store-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            background: radial-gradient(circle at center, rgba(251, 191, 36, 0.04), transparent 70%);
+            transition: 0.4s;
+            pointer-events: none;
+        }
+        .store-item:hover::before {
+            opacity: 1;
+        }
+        .store-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 215, 0, 0.08);
+        }
+        .store-item .store-rarity {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 12px;
+            border-radius: 100px;
+            display: inline-block;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        .store-item .store-name {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        .store-item .store-price {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            margin: 4px 0 6px;
+        }
+        .store-item .store-price i {
+            margin-right: 4px;
+        }
+        .store-item .store-desc {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 8px;
+        }
+        .store-item .store-stats {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.12);
+            margin-bottom: 8px;
+        }
+        .store-item .btn-buy {
+            padding: 6px 20px;
+            border-radius: 100px;
+            border: none;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .store-item .btn-buy:hover:not(:disabled) {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.25);
+        }
+        .store-item .btn-buy:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .store-item .btn-buy .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ─── BATTLE ARENA ─── */
+        .battle-arena {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 14px;
+            align-items: stretch;
+            padding: 16px 0 12px;
+            min-height: 280px;
+        }
+        .battle-player,
+        .battle-opponent {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 18px 16px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            text-align: center;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        .battle-player .card-display,
+        .battle-opponent .card-display {
+            width: 100%;
+        }
+        .battle-player .card-display .card-big-image,
+        .battle-opponent .card-display .card-big-image {
+            width: 100px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 14px;
+            margin: 0 auto 8px;
+            border: 2px solid rgba(255, 215, 0, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .battle-player .card-display .card-big-name,
+        .battle-opponent .card-display .card-big-name {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .battle-player .card-display .card-big-rarity,
+        .battle-opponent .card-display .card-big-rarity {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 12px;
+            border-radius: 100px;
+            display: inline-block;
+            margin: 3px 0 6px;
+            border: 1px solid transparent;
+        }
+        .battle-player .card-display .card-big-stats,
+        .battle-opponent .card-display .card-big-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+        }
+        .battle-player .card-display .card-big-stats span,
+        .battle-opponent .card-display .card-big-stats span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .battle-player .card-display .card-big-stats .stat-val,
+        .battle-opponent .card-display .card-big-stats .stat-val {
+            color: #fff;
+            font-weight: 600;
+        }
+        .battle-hp-bar {
+            width: 100%;
+            max-width: 200px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin: 6px auto 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .battle-hp-bar .hp-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #34d399, #fbbf24);
+        }
+        .battle-hp-bar .hp-fill.low {
+            background: linear-gradient(90deg, #f87171, #fbbf24);
+        }
+        .battle-hp-bar .hp-fill.critical {
+            background: #f87171;
+            animation: hpPulse 0.6s ease-in-out infinite alternate;
+        }
+        @keyframes hpPulse {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.4;
+            }
+        }
+
+        .battle-player .battle-status-badge,
+        .battle-opponent .battle-status-badge {
+            font-size: 0.55rem;
+            padding: 2px 10px;
+            border-radius: 100px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        .battle-player .battle-status-badge.defending {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.1);
+        }
+        .battle-opponent .battle-status-badge.defending {
+            background: rgba(52, 211, 153, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.1);
+        }
+
+        .battle-vs {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: rgba(255, 215, 0, 0.10);
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: vsPulse 2s ease-in-out infinite;
+        }
+        @keyframes vsPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .battle-log {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 14px;
+            padding: 12px 16px;
+            max-height: 110px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 215, 0, 0.03);
+            margin: 4px 0 10px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: monospace;
+            min-height: 60px;
+        }
+        .battle-log .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            animation: logFade 0.3s ease;
+        }
+        .battle-log .log-entry:last-child {
+            border-bottom: none;
+        }
+        @keyframes logFade {
+            from {
+                opacity: 0;
+                transform: translateX(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .battle-log .log-entry .highlight {
+            color: #fbbf24;
+        }
+        .battle-log .log-entry .damage {
+            color: #f87171;
+            font-weight: 700;
+        }
+        .battle-log .log-entry .heal {
+            color: #34d399;
+        }
+        .battle-log .log-entry .special {
+            color: #a78bfa;
+        }
+        .battle-log .log-entry .crit {
+            color: #ff6b35;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .battle-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 6px 0 4px;
+        }
+        .battle-actions button {
+            padding: 8px 22px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .battle-actions .btn-attack {
+            background: linear-gradient(135deg, #f87171, #dc2626);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(248, 113, 113, 0.15);
+        }
+        .battle-actions .btn-attack:hover:not(:disabled) {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(248, 113, 113, 0.35);
+        }
+        .battle-actions .btn-defend {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .battle-actions .btn-defend:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.10);
+        }
+        .battle-actions .btn-special {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.15);
+        }
+        .battle-actions .btn-special:hover:not(:disabled) {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(167, 139, 250, 0.35);
+        }
+        .battle-actions .btn-flee {
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .battle-actions .btn-flee:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .battle-actions button:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .battle-result {
+            text-align: center;
+            padding: 12px 0;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            animation: resultPop 0.4s ease;
+        }
+        @keyframes resultPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .battle-result.win {
+            color: #34d399;
+            text-shadow: 0 0 40px rgba(52, 211, 153, 0.2);
+        }
+        .battle-result.lose {
+            color: #f87171;
+            text-shadow: 0 0 40px rgba(248, 113, 113, 0.2);
+        }
+        .battle-result.draw {
+            color: #fbbf24;
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.2);
+        }
+        .battle-result.fled {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .battle-selection-hint {
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .battle-selection-hint span {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .battle-selection-hint span strong {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .battle-selection-hint .tab-btn {
+            padding: 3px 14px;
+            font-size: 0.65rem;
+            flex: 0 1 auto;
+        }
+
+        /* ─── ACHIEVEMENTS ─── */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+        }
+        .achievement-item.unlocked {
+            border-color: rgba(251, 191, 36, 0.10);
+            background: rgba(251, 191, 36, 0.03);
+        }
+        .achievement-item.locked {
+            opacity: 0.4;
+        }
+        .achievement-item .ach-icon {
+            font-size: 1.6rem;
+            width: 44px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .achievement-item .ach-icon.unlocked {
+            color: #fbbf24;
+        }
+        .achievement-item .ach-icon.locked {
+            color: rgba(255, 255, 255, 0.05);
+        }
+        .achievement-item .ach-info {
+            flex: 1;
+        }
+        .achievement-item .ach-info .ach-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+        .achievement-item .ach-info .ach-desc {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        .achievement-item .ach-info .ach-progress {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ─── DAILY REWARD ─── */
+        .daily-reward {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            background: rgba(251, 191, 36, 0.04);
+            border-radius: 16px;
+            border: 1px solid rgba(251, 191, 36, 0.06);
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .daily-reward .daily-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .daily-reward .daily-info i {
+            font-size: 1.4rem;
+            color: #fbbf24;
+        }
+        .daily-reward .daily-info .daily-text {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .daily-reward .daily-info .daily-text strong {
+            color: #fff;
+        }
+        .daily-reward .daily-btn {
+            padding: 6px 22px;
+            border-radius: 100px;
+            border: none;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .daily-reward .daily-btn:hover:not(:disabled) {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.2);
+        }
+        .daily-reward .daily-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .daily-reward .daily-btn .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 10px 18px;
+            border-radius: 14px;
+            background: rgba(15, 12, 35, 0.96);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.78rem;
+            color: #fff;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            max-width: 400px;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast i {
+            font-size: 1rem;
+        }
+        .toast.success i {
+            color: #34d399;
+        }
+        .toast.error i {
+            color: #f87171;
+        }
+        .toast.info i {
+            color: #60a5fa;
+        }
+        .toast.warning i {
+            color: #fbbf24;
+        }
+
+        /* ─── MODAL ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: rgba(20, 16, 45, 0.96);
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            border-radius: 26px;
+            padding: 26px 30px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            animation: modalPop 0.3s ease;
+        }
+        @keyframes modalPop {
+            from {
+                transform: scale(0.92);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .modal h2 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .modal h2 i {
+            color: #fbbf24;
+        }
+        .modal p {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+        .modal .modal-card-preview {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 14px;
+            margin: 6px 0 16px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+        }
+        .modal .modal-card-preview .mc-image {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .modal .modal-card-preview .mc-name {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .modal .modal-card-preview .mc-rarity {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 12px;
+            border-radius: 100px;
+            display: inline-block;
+            margin: 3px 0 5px;
+            border: 1px solid transparent;
+        }
+        .modal .modal-card-preview .mc-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .modal .modal-card-preview .mc-stats span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .modal .modal-card-preview .mc-stats .stat-val {
+            color: #fff;
+            font-weight: 600;
+        }
+        .modal .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+        .modal .form-actions button {
+            padding: 8px 28px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal .form-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .modal .form-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .modal .form-actions .btn-confirm {
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+        }
+        .modal .form-actions .btn-confirm:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.2);
+        }
+        .modal .form-actions .btn-confirm:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ─── AUTH OVERLAY ─── */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(11, 7, 25, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 24px;
+        }
+        .auth-overlay.show {
+            display: flex;
+        }
+        .auth-overlay .lock-icon {
+            font-size: 3.6rem;
+            color: rgba(251, 191, 36, 0.15);
+            margin-bottom: 18px;
+        }
+        .auth-overlay h2 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .auth-overlay p {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            max-width: 400px;
+            margin-bottom: 24px;
+        }
+        .auth-overlay .btn-login-now {
+            padding: 10px 36px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            border: none;
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .auth-overlay .btn-login-now:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.15);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 820px) {
+            .wrapper {
+                padding: 10px 14px 16px;
+            }
+            .battle-arena {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                min-height: auto;
+            }
+            .battle-vs {
+                font-size: 1.2rem;
+                padding: 4px 0;
+            }
+            .game-header h1 {
+                font-size: 1.1rem;
+            }
+            .collection-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 10px;
+            }
+            .store-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .tab-btn {
+                padding: 6px 12px;
+                font-size: 0.65rem;
+            }
+            .tab-btn i {
+                font-size: 0.7rem;
+            }
+            .nav-links {
+                gap: 10px;
+                font-size: 0.7rem;
+            }
+            .daily-reward {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px;
+            }
+            .daily-reward .daily-info {
+                justify-content: center;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .nav-left {
+                justify-content: center;
+                gap: 10px;
+            }
+            .nav-right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .game-header .game-stats {
+                justify-content: center;
+            }
+            .collection-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .store-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .battle-actions {
+                gap: 6px;
+            }
+            .battle-actions button {
+                padding: 6px 14px;
+                font-size: 0.65rem;
+            }
+            .battle-player,
+            .battle-opponent {
+                padding: 12px;
+                min-height: 130px;
+            }
+            .modal {
+                padding: 18px 16px;
+            }
+            .toast {
+                bottom: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: none;
+                padding: 8px 14px;
+                font-size: 0.7rem;
+            }
+            .tab-bar {
+                gap: 2px;
+                padding: 2px;
+            }
+            .tab-btn {
+                padding: 5px 10px;
+                font-size: 0.6rem;
+                flex: 1;
+            }
+            .tab-btn i {
+                font-size: 0.65rem;
+            }
+            .collection-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .collection-toolbar .filter-group {
+                justify-content: center;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr;
+            }
+            .battle-selection-hint {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 400px) {
+            .collection-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .store-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card-item {
+                padding: 10px 8px;
+            }
+            .card-item .card-name {
+                font-size: 0.7rem;
+            }
+            .card-item .card-stats {
+                font-size: 0.55rem;
+                gap: 0px 4px;
+            }
+            .store-item {
+                padding: 12px 10px;
+            }
+            .store-item .store-name {
+                font-size: 0.75rem;
+            }
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.08);
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .mt-1 {
+            margin-top: 6px;
+        }
+        .mb-1 {
+            margin-bottom: 6px;
+        }
+        .op-5 {
+            opacity: 0.5;
+        }
+        .op-3 {
+            opacity: 0.3;
+        }
+        .text-gold {
+            color: #fbbf24;
+        }
+        .text-muted {
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .text-sm {
+            font-size: 0.7rem;
+        }
+        .text-xs {
+            font-size: 0.6rem;
+        }
+
+        /* ─── CARD GLOW EFFECTS ─── */
+        .card-glow-COMMON {
+            box-shadow: 0 0 20px rgba(138, 138, 138, 0.05);
+        }
+        .card-glow-UNCOMMON {
+            box-shadow: 0 0 25px rgba(91, 158, 107, 0.08);
+        }
+        .card-glow-RARE {
+            box-shadow: 0 0 30px rgba(74, 143, 212, 0.12);
+        }
+        .card-glow-EPIC {
+            box-shadow: 0 0 35px rgba(155, 95, 192, 0.15);
+        }
+        .card-glow-ANCIENT {
+            box-shadow: 0 0 40px rgba(212, 160, 74, 0.18);
+        }
+        .card-glow-DRAGON {
+            box-shadow: 0 0 45px rgba(212, 90, 74, 0.20);
+        }
+        .card-glow-LEGENDARY {
+            box-shadow: 0 0 50px rgba(255, 107, 53, 0.25);
+        }
+        .card-glow-TITAN {
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.30);
+        }
+        .card-glow-IMMORTAL {
+            box-shadow: 0 0 70px rgba(255, 45, 85, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+
+    <!-- ─── AUTH OVERLAY ─── -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="lock-icon"><i class="fas fa-lock"></i></div>
+        <h2>🔐 Session Required</h2>
+        <p>You need to be logged in to play Card Battler.<br />Please sign in to continue.</p>
+        <button class="btn-login-now" id="goToLoginBtn">
+            <i class="fas fa-sign-in-alt"></i> Go to Login
+        </button>
+    </div>
+
+    <!-- ─── MAIN WRAPPER ─── -->
+    <div class="wrapper" id="mainWrapper">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <div class="brand">
+                    <i class="fas fa-crown"></i> Arvroyal Casino<span style="color:rgba(255,255,255,0.08);">.io</span>
+                    <span class="live-dot"></span>
+                </div>
+                <div class="nav-links">
+                    <a href="dashboard.html">Lobby</a>
+                    <a href="cardbattle.html" class="active">⚔️ Battler</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="user-info">
+                    <div class="user-avatar" id="dashAvatar">U</div>
+                    <div class="user-details">
+                        <h4 id="dashName">User</h4>
+                        <span><i class="fas fa-id-badge"></i> <span id="dashEmail">user@casino.io</span></span>
+                    </div>
+                </div>
+                <div class="balance-display" id="balanceDisplay">
+                    <i class="fas fa-coins"></i>
+                    <span class="balance-amount" id="navBalance">0.00</span>
+                    <span class="currency">PHP</span>
+                </div>
+                <div class="db-status online" id="dbStatus">
+                    <i class="fas fa-circle"></i>
+                    <span class="status-label">DB</span>
+                    <span class="status-value" id="dbStatusLabel">github</span>
+                </div>
+                <div class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Exit
+                </div>
+            </div>
+        </nav>
+
+        <!-- GAME HEADER -->
+        <div class="game-header">
+            <h1><i class="fas fa-gamepad"></i> Card Battler</h1>
+            <div class="game-stats">
+                <span><i class="fas fa-trophy"></i> Wins: <span class="stat-val" id="statWins">0</span></span>
+                <span><i class="fas fa-skull"></i> Losses: <span class="stat-val" id="statLosses">0</span></span>
+                <span><i class="fas fa-handshake"></i> Draws: <span class="stat-val" id="statDraws">0</span></span>
+                <span><i class="fas fa-layer-group"></i> Cards: <span class="stat-val" id="statCards">0</span></span>
+                <span><i class="fas fa-fire"></i> Streak: <span class="stat-val" id="statStreak">0</span></span>
+            </div>
+        </div>
+
+        <!-- ─── DAILY REWARD ─── -->
+        <div class="daily-reward" id="dailyReward">
+            <div class="daily-info">
+                <i class="fas fa-gift"></i>
+                <div class="daily-text">
+                    <strong>Daily Reward</strong> — <span id="dailyDesc">Claim your free bonus!</span>
+                </div>
+            </div>
+            <button class="daily-btn" id="dailyBtn"><i class="fas fa-hand-holding-heart"></i> Claim</button>
+        </div>
+
+        <!-- TAB BAR -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="tabBattle"><i class="fas fa-swords"></i> Battle</button>
+            <button class="tab-btn" data-tab="tabCollection"><i class="fas fa-id-card"></i> Collection</button>
+            <button class="tab-btn" data-tab="tabStore"><i class="fas fa-store"></i> Store</button>
+            <button class="tab-btn" data-tab="tabAchievements"><i class="fas fa-trophy"></i> Achievements</button>
+        </div>
+
+        <!-- ─── TAB: BATTLE ─── -->
+        <div class="tab-content active" id="tabBattle">
+            <div id="battleArea">
+                <div class="battle-arena">
+                    <div class="battle-player" id="battlePlayer">
+                        <div class="card-display" id="playerCardDisplay">
+                            <div style="color:rgba(255,255,255,0.08);font-size:0.75rem;">
+                                <i class="fas fa-user" style="font-size:1.4rem;display:block;margin-bottom:4px;"></i>
+                                Select a card from your Collection
+                            </div>
+                        </div>
+                    </div>
+                    <div class="battle-vs">⚔️</div>
+                    <div class="battle-opponent" id="battleOpponent">
+                        <div class="card-display" id="opponentCardDisplay">
+                            <div style="color:rgba(255,255,255,0.08);font-size:0.75rem;">
+                                <i class="fas fa-robot" style="font-size:1.4rem;display:block;margin-bottom:4px;"></i>
+                                Waiting for opponent…
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="battle-log" id="battleLog">
+                    <div class="log-entry" style="color:rgba(255,255,255,0.10);">⚔️ Select a card and press "Attack" to begin battle!</div>
+                </div>
+
+                <div class="battle-actions">
+                    <button class="btn-attack" id="btnAttack" disabled><i class="fas fa-bolt"></i> Attack</button>
+                    <button class="btn-defend" id="btnDefend" disabled><i class="fas fa-shield-alt"></i> Defend</button>
+                    <button class="btn-special" id="btnSpecial" disabled><i class="fas fa-meteor"></i> Special</button>
+                    <button class="btn-flee" id="btnFlee"><i class="fas fa-running"></i> Flee</button>
+                </div>
+
+                <div class="battle-result" id="battleResult"></div>
+            </div>
+
+            <div class="battle-selection-hint">
+                <span><i class="fas fa-info-circle"></i> Select a card from <strong>Collection</strong>, then battle!</span>
+                <button class="tab-btn" style="padding:3px 14px;font-size:0.65rem;" data-tab="tabCollection"><i class="fas fa-id-card"></i> Collection</button>
+            </div>
+        </div>
+
+        <!-- ─── TAB: COLLECTION ─── -->
+        <div class="tab-content" id="tabCollection">
+            <div class="collection-toolbar">
+                <div class="filter-group">
+                    <select id="filterRarity">
+                        <option value="all">All Rarities</option>
+                        <option value="COMMON">Common</option>
+                        <option value="UNCOMMON">Uncommon</option>
+                        <option value="RARE">Rare</option>
+                        <option value="EPIC">Epic</option>
+                        <option value="ANCIENT">Ancient</option>
+                        <option value="DRAGON">Dragon</option>
+                        <option value="LEGENDARY">Legendary</option>
+                        <option value="TITAN">Titan</option>
+                        <option value="IMMORTAL">Immortal</option>
+                    </select>
+                    <select id="filterType">
+                        <option value="all">All Types</option>
+                        <option value="Warrior">Warrior</option>
+                        <option value="Mage">Mage</option>
+                        <option value="Assassin">Assassin</option>
+                        <option value="Tank">Tank</option>
+                        <option value="Archer">Archer</option>
+                        <option value="Healer">Healer</option>
+                    </select>
+                </div>
+                <div class="collection-count" id="collectionCount">0 cards</div>
+            </div>
+            <div class="collection-grid" id="collectionGrid">
+                <div class="no-cards">
+                    <i class="fas fa-id-card"></i>
+                    <div class="empty-title">No cards in your collection</div>
+                    <div class="empty-desc">Visit the Store to buy some!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── TAB: STORE ─── -->
+        <div class="tab-content" id="tabStore">
+            <div class="store-header">
+                <p><i class="fas fa-coins"></i> Buy cards with your balance. Higher rarity = better stats!</p>
+                <span style="font-size:0.7rem;color:rgba(255,255,255,0.10);">Card packs contain random cards</span>
+            </div>
+            <div class="store-grid" id="storeGrid"></div>
+        </div>
+
+        <!-- ─── TAB: ACHIEVEMENTS ─── -->
+        <div class="tab-content" id="tabAchievements">
+            <p style="font-size:0.75rem;color:rgba(255,255,255,0.12);margin-bottom:12px;">
+                <i class="fas fa-info-circle"></i> Unlock achievements by playing and winning battles!
+            </p>
+            <div class="achievement-grid" id="achievementGrid"></div>
+        </div>
+
+    </div>
+
+    <!-- ─── MODAL ─── -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 id="modalTitle"><i class="fas fa-gem"></i> Card Acquired!</h2>
+            <div class="modal-card-preview" id="modalCardPreview">
+                <img class="mc-image" id="modalCardImage" src="" alt="Card image" />
+                <div class="mc-name" id="modalCardName">Shadowblade</div>
+                <div class="mc-rarity" id="modalCardRarity">EPIC</div>
+                <div class="mc-stats">
+                    <span>⚔️ <span class="stat-val" id="modalAtk">0</span></span>
+                    <span>🛡️ <span class="stat-val" id="modalDef">0</span></span>
+                    <span>❤️ <span class="stat-val" id="modalHp">0</span></span>
+                    <span>💨 <span class="stat-val" id="modalSpd">0</span></span>
+                </div>
+            </div>
+            <p id="modalDesc">A powerful card has been added to your collection!</p>
+            <div class="form-actions">
+                <button class="btn-confirm" id="modalConfirm">Awesome!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── TOAST ─── -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Ready</span>
+    </div>
+<audio id="bgMusic" loop preload="auto"><source src="cardbgmusic.mp3" type="audio/mpeg"></audio>
+<script>    
+ const bgAudio = document.getElementById('bgMusic'); 
+           // ─── AUDIO ──────────────────────────────────────────
+            function enableAudio() {
+                if (bgAudio.paused) {
+                    bgAudio.play().catch(() => {});
+                }
+                document.removeEventListener('click', enableAudio);
+                document.removeEventListener('keydown', enableAudio);
+            }
+            document.addEventListener('click', enableAudio);
+            document.addEventListener('keydown', enableAudio);
+
+            muteBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                bgAudio.muted = isMuted;
+                spinAudio.muted = isMuted;
+                jackpotAudio.muted = isMuted;
+                muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            });
+</script>
+    <!-- ─── JAVASCRIPT ─── -->
+    <script>
+        // ============================================================
+        //  SECURITY
+        // ============================================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12') { e.preventDefault();
+                return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault();
+                return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault();
+                return false; }
+        });
+
+        // ============================================================
+        //  CONSTANTS – GitHub
+        // ============================================================
+        const ENCRYPTION_KEY_HASH = '$2a$12$tLvlRpTmRlBdGSUBZ8.phe4dOfl09CcFEp2cjG.U8lpPKvtwku5N6';
+        const GITHUB_OWNER = 'tcute6851';
+        const GITHUB_REPO = 'Arvroyal-Casino-Games';
+        const GITHUB_PATH = 'CasinoDB.json';
+        const GITHUB_TOKEN_KEY = 'github_pat';
+
+        let dbData = { users: [] };
+        let currentUser = null;
+        let _githubSha = null;
+        let _defaultBranch = 'main';
+
+        // ─── DOM REFS ──────────────────────────────────────────
+        const authOverlay = document.getElementById('authOverlay');
+        const mainWrapper = document.getElementById('mainWrapper');
+      
+        // ============================================================
+        //  CRYPTO HELPERS
+        // ============================================================
+        async function deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+            );
+            return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }   
+
+        async function encryptData(plaintext) {
+            const enc = new TextEncoder();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv },
+                key,
+                enc.encode(plaintext)
+            );
+            const parts = [
+                btoa(String.fromCharCode(...salt)),
+                btoa(String.fromCharCode(...iv)),
+                btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+            ];
+            return parts.join(':');
+        }
+
+        async function decryptData(encryptedString) {
+            const parts = encryptedString.split(':');
+            if (parts.length !== 3) throw new Error('Invalid encrypted format');
+            const salt = Uint8Array.from(atob(parts[0]), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(parts[1]), c => c.charCodeAt(0));
+            const ciphertext = Uint8Array.from(atob(parts[2]), c => c.charCodeAt(0));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv },
+                key,
+                ciphertext
+            );
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ============================================================
+        //  GITHUB HELPERS
+        // ============================================================
+        function getGitHubToken() {
+            let token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                token = prompt('🔑 Enter your GitHub Personal Access Token (with repo scope):');
+                if (token) localStorage.setItem(GITHUB_TOKEN_KEY, token);
+            }
+            return token;
+        }
+
+        function clearToken() { localStorage.removeItem(GITHUB_TOKEN_KEY); }
+
+        async function detectDefaultBranch(token) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+                const resp = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (resp.ok) { const data = await resp.json(); return data.default_branch || 'main'; }
+            } catch {}
+            return 'main';
+        }
+
+        async function createEmptyDatabase(token, branch) {
+            const emptyData = { users: [] };
+            const json = JSON.stringify(emptyData, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+            const url =
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({ message: 'Initialize CasinoDB.json', content: content, branch: branch })
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`GitHub API error (${response.status}): ${errorData.message || response.statusText}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+        }
+
+        async function loadDatabase(showToastMsg = true) {
+            let token = getGitHubToken();
+            if (!token) {
+                setDbStatus('offline', 'no token');
+                showToast('GitHub token required.', 'error');
+                return false;
+            }
+            try {
+                const branch = await detectDefaultBranch(token);
+                _defaultBranch = branch;
+                const url =
+                    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (response.status === 404) {
+                    await createEmptyDatabase(token, branch);
+                    dbData = { users: [] };
+                    if (showToastMsg) showToast('✅ New database created!', 'success');
+                    setDbStatus('online', 'github');
+                    await checkSession();
+                    return true;
+                }
+                if (response.status === 401) {
+                    clearToken();
+                    showToast('Invalid GitHub token.', 'error');
+                    setDbStatus('offline', 'invalid token');
+                    return false;
+                }
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`GitHub API error (${response.status}): ${errorData.message || response.statusText}`);
+                }
+                const data = await response.json();
+                const content = atob(data.content);
+                _githubSha = data.sha;
+                let json;
+                try {
+                    const decrypted = await decryptData(content);
+                    json = JSON.parse(decrypted);
+                } catch {
+                    json = JSON.parse(content);
+                }
+                dbData = json;
+                if (showToastMsg) showToast('✅ Your access granted is successful!', 'success');
+                setDbStatus('online', 'github');
+                await checkSession();
+                return true;
+            } catch (error) {
+                console.error('loadDatabase error:', error);
+                showToast('Failed to load database: ' + error.message, 'error');
+                setDbStatus('offline', 'error');
+                return false;
+            }
+        }
+
+        async function saveDatabase(data) {
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) { showToast('No GitHub token found.', 'error'); return; }
+            const json = JSON.stringify(data, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+            const url =
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Update CasinoDB.json',
+                    content: content,
+                    sha: _githubSha,
+                    branch: _defaultBranch
+                })
+            });
+            if (response.status === 401) { clearToken();
+                showToast('GitHub token expired.', 'error'); return; }
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`Failed to save: ${errorData.message || response.statusText}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+        }
+
+        function setDbStatus(state, source) {
+            const el = document.getElementById('dbStatus');
+            const label = document.getElementById('dbStatusLabel');
+            el.className = 'db-status ' + state;
+            label.textContent = state === 'online' ? (source || 'github') : 'offline';
+        }
+
+        // ============================================================
+        //  AUTH
+        // ============================================================
+        function showAuthOverlay(show) {
+            if (show) {
+                authOverlay.classList.add('show');
+                mainWrapper.style.opacity = '0.3';
+                mainWrapper.style.pointerEvents = 'none';
+            } else {
+                authOverlay.classList.remove('show');
+                mainWrapper.style.opacity = '1';
+                mainWrapper.style.pointerEvents = 'auto';
+            }
+        }
+
+        document.getElementById('goToLoginBtn').addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        //  USER SESSION
+        // ============================================================
+        async function checkSession() {
+            const saved = sessionStorage.getItem('auth_user');
+            if (!saved) {
+                showAuthOverlay(true);
+                return false;
+            }
+            try {
+                const user = JSON.parse(saved);
+                const exists = dbData.users.find(u => u.id === user.id);
+                if (exists) {
+                    if (exists.balance === undefined) exists.balance = 0;
+                    if (!exists.cards) exists.cards = [];
+                    if (!exists.battleStats) exists.battleStats = { wins: 0, losses: 0, draws: 0 };
+                    if (!exists.achievements) exists.achievements = [];
+                    if (!exists.streak) exists.streak = 0;
+                    if (!exists.lastDaily) exists.lastDaily = 0;
+                    showAuthOverlay(false);
+                    currentUser = exists;
+                    renderUI(exists);
+                    return true;
+                } else {
+                    sessionStorage.removeItem('auth_user');
+                    showAuthOverlay(true);
+                    showToast('Session invalid. Please log in again.', 'error');
+                    return false;
+                }
+            } catch {
+                sessionStorage.removeItem('auth_user');
+                showAuthOverlay(true);
+                return false;
+            }
+        }
+
+        // ============================================================
+        //  CARD SYSTEM – FULL FLEDGE with REALISTIC ONLINE IMAGES
+        // ============================================================
+        const RARITY_TIERS = ['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'ANCIENT', 'DRAGON', 'LEGENDARY', 'TITAN', 'IMMORTAL'];
+
+        const RARITY_PRICES = {
+            COMMON: 2500,
+            UNCOMMON: 5000,
+            RARE: 25000,
+            EPIC: 50000,
+            ANCIENT: 150000,
+            DRAGON: 300000,
+            LEGENDARY: 500000,
+            TITAN: 1000000,
+            IMMORTAL: 5000000
+        };
+
+        const RARITY_MULTIPLIERS = {
+            COMMON: 1.0,
+            UNCOMMON: 1.4,
+            RARE: 1.9,
+            EPIC: 2.5,
+            ANCIENT: 3.2,
+            DRAGON: 4.0,
+            LEGENDARY: 5.0,
+            TITAN: 6.5,
+            IMMORTAL: 8.5
+        };
+
+        const RARITY_COLORS = {
+            COMMON: '#8a8a8a',
+            UNCOMMON: '#5b9e6b',
+            RARE: '#4a8fd4',
+            EPIC: '#9b5fc0',
+            ANCIENT: '#d4a04a',
+            DRAGON: '#d45a4a',
+            LEGENDARY: '#ff6b35',
+            TITAN: '#ffd700',
+            IMMORTAL: '#ff2d55'
+        };
+
+        const CARD_TYPES = ['Warrior', 'Mage', 'Assassin', 'Tank', 'Archer', 'Healer'];
+        const TYPE_BASES = {
+            Warrior: { attack: 40, defense: 35, health: 100, speed: 30 },
+            Mage: { attack: 55, defense: 20, health: 70, speed: 40 },
+            Assassin: { attack: 60, defense: 15, health: 60, speed: 75 },
+            Tank: { attack: 25, defense: 50, health: 120, speed: 20 },
+            Archer: { attack: 50, defense: 25, health: 75, speed: 55 },
+            Healer: { attack: 20, defense: 30, health: 90, speed: 45 }
+        };
+
+        const TYPE_ICONS = {
+            Warrior: '⚔️',
+            Mage: '🔮',
+            Assassin: '🗡️',
+            Tank: '🛡️',
+            Archer: '🏹',
+            Healer: '💚'
+        };
+
+        // ─── MASSIVE CARD NAME POOL ───
+        const RARITY_NAMES = {
+            COMMON: [
+                'Ironclad', 'Steelshot', 'Quickblade', 'Stonewall', 'Ember', 'Frost', 'Thorn', 'Spark',
+                'Mudrock', 'Birch', 'Clover', 'Pebble', 'Breeze', 'Shade', 'Glimmer', 'Ash', 'Flint',
+                'Rust', 'Cinder', 'Dust', 'Moss', 'Boulder', 'Stream', 'Twig', 'Leaf', 'Petal', 'Dew',
+                'Mist', 'Fog', 'Haze', 'Ripple', 'Stone', 'Flame', 'Shard', 'Crack', 'Grit', 'Gravel',
+                'Pine', 'Oak', 'Maple', 'Fern', 'Willow'
+            ],
+            UNCOMMON: [
+                'Shadow', 'Storm', 'Flame', 'Frostbite', 'Thunder', 'Viper', 'Wolf', 'Eagle', 'Lion',
+                'Bear', 'Cobra', 'Falcon', 'Tiger', 'Panther', 'Serpent', 'Raven', 'Hawk', 'Shark',
+                'Stag', 'Bison', 'Puma', 'Lynx', 'Fox', 'Boar', 'Ram', 'Bull', 'Stallion',
+                'Griffin', 'Wyvern', 'Basilisk', 'Chimera', 'Hydra', 'Manticore', 'Sphinx', 'Pegasus',
+                'Unicorn', 'Dragonet', 'Phoenix', 'Golem', 'Salamander', 'Dryad', 'Nymph', 'Sprite'
+            ],
+            RARE: [
+                'Blazing Fury', 'Frost Giant', 'Storm Lord', 'Shadow Strike', 'Iron Will', 'Crystal Heart',
+                'Dark Blade', 'Light Bringer', 'Earth Shaker', 'Wind Walker', 'Flame Keeper', 'Ice Weaver',
+                'Thunder Caller', 'Venom Fang', 'Wolf Pack', 'Eagle Eye', 'Lion Heart', 'Bear Claw',
+                'Cobra Strike', 'Falcon Dive', 'Tiger Fury', 'Panther Claw', 'Serpent Venom', 'Raven Wing',
+                'Hawk Talon', 'Shark Jaw', 'Stag Antler', 'Bison Charge', 'Puma Pounce', 'Lynx Sight',
+                'Fox Trick', 'Boar Tusk', 'Ram Head', 'Bull Charge', 'Stallion Kick', 'Griffin Claw',
+                'Wyvern Scale', 'Basilisk Gaze', 'Chimera Flame', 'Hydra Fang', 'Manticore Tail'
+            ],
+            EPIC: [
+                'Dragon Knight', 'Phoenix Lord', 'Demon Hunter', 'Celestial Mage', 'Shadow Assassin',
+                'Titan Guardian', 'Void Walker', 'Storm Weaver', 'Frost Empress', 'Ember King',
+                'Arcane Master', 'Dread Knight', 'Soul Reaper', 'Dream Eater', 'Star Forger',
+                'World Shaper', 'Reality Bender', 'Time Weaver', 'Space Walker', 'Void Lord',
+                'Cosmic Entity', 'Eternal Flame', 'Ancient One', 'First Born', 'Light Weaver',
+                'Dark Lord', 'Thunder God', 'Ice Queen', 'Fire Emperor', 'Wind Prince',
+                'Earth King', 'Sea Empress', 'Sky Lord', 'Shadow King', 'Crystal Mage'
+            ],
+            ANCIENT: [
+                'Ancient One', 'First Born', 'Eternal Flame', 'Cosmic Entity', 'Void Lord',
+                'Time Weaver', 'Space Walker', 'Reality Bender', 'Soul Reaper', 'Dream Eater',
+                'Star Forger', 'World Shaper', 'Aeon Master', 'Epoch Keeper', 'Genesis Weaver',
+                'Omega Dragon', 'Alpha Phoenix', 'Primordial Titan', 'Elder God', 'Ancestral Spirit',
+                'Timeless Guardian', 'Infinite Seer', 'Eternal Warden', 'Cosmic Dragon', 'Void Phoenix',
+                'Reality Warper', 'Dimension Walker', 'Celestial Emperor', 'Abyssal Lord', 'Dawn Bringer',
+                'Dusk Reaper', 'Star Emperor', 'Galaxy Shaper', 'Nebula Weaver', 'Quasar Knight'
+            ],
+            DRAGON: [
+                'Dragon Lord', 'Wyrm King', 'Scale Protector', 'Flame Wyvern', 'Frost Dragon',
+                'Shadow Drake', 'Storm Serpent', 'Earth Dragon', 'Celestial Wyrm', 'Void Dragon',
+                'Inferno Drake', 'Soul Wyrm', 'Dragon Emperor', 'Dragon Empress', 'Dragon Prince',
+                'Dragon Princess', 'Dragon Knight', 'Dragon Mage', 'Dragon Assassin', 'Dragon Tank',
+                'Dragon Archer', 'Dragon Healer', 'Obsidian Dragon', 'Crystal Dragon', 'Ruby Dragon',
+                'Sapphire Dragon', 'Emerald Dragon', 'Amethyst Dragon', 'Golden Dragon', 'Silver Dragon',
+                'Platinum Dragon', 'Iron Dragon', 'Steel Dragon', 'Bronze Dragon', 'Copper Dragon'
+            ],
+            LEGENDARY: [
+                'Legendary Hero', 'Mythic Beast', 'God Slayer', 'World Ender', 'Star Forger',
+                'Dream Weaver', 'Shadow Lord', 'Light Bringer', 'Chaos Emperor', 'Order Keeper',
+                'Eternal Guardian', 'Fate Weaver', 'Destiny Walker', 'Karma Shaper', 'Soul Binder',
+                'Reality Anchor', 'Time Keeper', 'Space Warden', 'Dimension King', 'Void Emperor',
+                'Celestial God', 'Abyssal Demon', 'Primordial Beast', 'Elder Elemental', 'Cosmic Knight',
+                'Galactic Mage', 'Nebula Lord', 'Quasar King', 'Pulsar Emperor', 'Supernova God'
+            ],
+            TITAN: [
+                'Titan of War', 'Titan of Wisdom', 'Titan of Might', 'Titan of Speed', 'Titan of Endurance',
+                'Titan of Fury', 'Titan of Glory', 'Titan of Power', 'Titan of Light', 'Titan of Shadow',
+                'Titan of Fire', 'Titan of Ice', 'Titan of Thunder', 'Titan of Earth', 'Titan of Wind',
+                'Titan of Water', 'Titan of Time', 'Titan of Space', 'Titan of Reality', 'Titan of Void',
+                'Titan of Creation', 'Titan of Destruction', 'Titan of Order', 'Titan of Chaos',
+                'Titan of Balance', 'Titan of Justice', 'Titan of Wisdom', 'Titan of Knowledge',
+                'Titan of Truth', 'Titan of Honor', 'Titan of Glory', 'Titan of Victory'
+            ],
+            IMMORTAL: [
+                'Immortal One', 'Eternal Champion', 'Undying King', 'Deathless Lord', 'Infinite Power',
+                'Boundless Soul', 'Timeless Warrior', 'Unending Might', 'Eternal Sovereign', 'Deathless Phoenix',
+                'Immortal Dragon', 'Eternal God', 'Undying Emperor', 'Deathless Ruler', 'Infinite Emperor',
+                'Boundless God', 'Timeless King', 'Unending Lord', 'Eternal Ruler', 'Deathless Sovereign'
+            ]
+        };
+
+        function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        // ─── GENERATE CARD WITH REALISTIC ONLINE IMAGE ───
+        function generateCard(rarity) {
+            const type = randomFrom(CARD_TYPES);
+            const base = TYPE_BASES[type];
+            const mult = RARITY_MULTIPLIERS[rarity] || 1.0;
+            const nameList = RARITY_NAMES[rarity] || RARITY_NAMES.COMMON;
+            const name = randomFrom(nameList);
+            const id = 'card_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+            const variance = (v) => Math.round(v * (0.85 + Math.random() * 0.30));
+
+            const baseAtk = Math.round(base.attack * mult);
+            const baseDef = Math.round(base.defense * mult);
+            const baseHp = Math.round(base.health * mult);
+            const baseSpd = Math.round(base.speed * mult);
+
+            const atk = variance(baseAtk);
+            const def = variance(baseDef);
+            const hp = variance(baseHp);
+            const spd = variance(baseSpd);
+
+            // ─── REALISTIC ONLINE IMAGE: use picsum with seed + type context ───
+            // We use a seed based on name + type + rarity to get a consistent image
+            // that tends toward fantasy/game-like photos from picsum's random pool
+            const seedBase = name + type + rarity;
+            const seed = encodeURIComponent(seedBase);
+            const image = `https://picsum.photos/seed/${seed}/200/280`;
+
+            return {
+                id: id,
+                name: name,
+                rarity: rarity,
+                type: type,
+                attack: Math.max(1, atk),
+                defense: Math.max(1, def),
+                health: Math.max(5, hp),
+                maxHealth: Math.max(5, hp),
+                speed: Math.max(1, spd),
+                level: 1,
+                xp: 0,
+                wins: 0,
+                image: image,
+                typeIcon: TYPE_ICONS[type] || '⚔️'
+            };
+        }
+
+        function getUpgradeCost(card) {
+            const baseCost = RARITY_PRICES[card.rarity] || 2500;
+            return Math.max(100, Math.round(baseCost * card.level * 0.35) + 50);
+        }
+
+        function upgradeCard(card) {
+            const cost = getUpgradeCost(card);
+            card.level += 1;
+            const mult = RARITY_MULTIPLIERS[card.rarity] || 1.0;
+            const base = TYPE_BASES[card.type];
+            const lvMult = 1 + (card.level - 1) * 0.08;
+            card.attack = Math.round(base.attack * mult * lvMult);
+            card.defense = Math.round(base.defense * mult * lvMult);
+            card.health = Math.round(base.health * mult * lvMult);
+            card.maxHealth = card.health;
+            card.speed = Math.round(base.speed * mult * lvMult);
+            return cost;
+        }
+
+        // ============================================================
+        //  ACHIEVEMENTS
+        // ============================================================
+        const ACHIEVEMENTS = [
+            { id: 'first_win', name: 'First Victory', desc: 'Win your first battle', icon: '🏆', check: (u) => (u
+                    .battleStats?.wins || 0) >= 1 },
+            { id: 'win_10', name: 'Rising Star', desc: 'Win 10 battles', icon: '⭐', check: (u) => (u.battleStats?.wins ||
+                    0) >= 10 },
+            { id: 'win_50', name: 'Battle Master', desc: 'Win 50 battles', icon: '👑', check: (u) => (u.battleStats?.wins ||
+                    0) >= 50 },
+            { id: 'win_100', name: 'Legendary Warrior', desc: 'Win 100 battles', icon: '🏅', check: (u) => (u.battleStats
+                    ?.wins || 0) >= 100 },
+            { id: 'win_500', name: 'War God', desc: 'Win 500 battles', icon: '⚡', check: (u) => (u.battleStats?.wins ||
+                    0) >= 500 },
+            { id: 'streak_5', name: 'On Fire!', desc: 'Win 5 battles in a row', icon: '🔥', check: (u) => (u.streak || 0) >=
+                    5 },
+            { id: 'streak_10', name: 'Unstoppable', desc: 'Win 10 battles in a row', icon: '⚡', check: (u) => (u.streak ||
+                    0) >= 10 },
+            { id: 'streak_20', name: 'Godlike', desc: 'Win 20 battles in a row', icon: '💀', check: (u) => (u.streak || 0) >=
+                    20 },
+            { id: 'collect_10', name: 'Collector', desc: 'Own 10 cards', icon: '📦', check: (u) => (u.cards?.length || 0) >=
+                    10 },
+            { id: 'collect_25', name: 'Card Hoarder', desc: 'Own 25 cards', icon: '🗃️', check: (u) => (u.cards?.length ||
+                    0) >= 25 },
+            { id: 'collect_50', name: 'Master Collector', desc: 'Own 50 cards', icon: '💎', check: (u) => (u.cards?.length ||
+                    0) >= 50 },
+            { id: 'collect_100', name: 'Card Emperor', desc: 'Own 100 cards', icon: '👑', check: (u) => (u.cards?.length ||
+                    0) >= 100 },
+            { id: 'legendary_card', name: 'Legendary Find', desc: 'Acquire a Legendary card', icon: '🌟', check: (u) => (u
+                    .cards || []).some(c => c.rarity === 'LEGENDARY') },
+            { id: 'titan_card', name: 'Titan Slayer', desc: 'Acquire a Titan card', icon: '⚔️', check: (u) => (u.cards || [])
+                    .some(c => c.rarity === 'TITAN') },
+            { id: 'immortal_card', name: 'Immortal Soul', desc: 'Acquire an Immortal card', icon: '☀️', check: (u) => (u
+                    .cards || []).some(c => c.rarity === 'IMMORTAL') },
+            { id: 'upgrade_5', name: 'Upgrader', desc: 'Upgrade a card 5 times', icon: '🛠️', check: (u) => {
+                    let total = 0;
+                    (u.cards || []).forEach(c => { total += c.level - 1; });
+                    return total >= 5;
+                } },
+            { id: 'upgrade_20', name: 'Master Forger', desc: 'Upgrade cards 20 times total', icon: '🔧', check: (u) => {
+                    let total = 0;
+                    (u.cards || []).forEach(c => { total += c.level - 1; });
+                    return total >= 20;
+                } },
+            { id: 'upgrade_50', name: 'Grand Forger', desc: 'Upgrade cards 50 times total', icon: '⚒️', check: (u) => {
+                    let total = 0;
+                    (u.cards || []).forEach(c => { total += c.level - 1; });
+                    return total >= 50;
+                } },
+            { id: 'dragon_slayer', name: 'Dragon Slayer', desc: 'Acquire a Dragon card', icon: '🐉', check: (u) => (u
+                    .cards || []).some(c => c.rarity === 'DRAGON') },
+            { id: 'ancient_one', name: 'Ancient Awakening', desc: 'Acquire an Ancient card', icon: '⏳', check: (u) => (u
+                    .cards || []).some(c => c.rarity === 'ANCIENT') },
+            { id: 'epic_master', name: 'Epic Master', desc: 'Acquire an Epic card', icon: '✨', check: (u) => (u.cards || [])
+                    .some(c => c.rarity === 'EPIC') }
+        ];
+
+        function checkAchievements(user) {
+            if (!user.achievements) user.achievements = [];
+            let unlocked = 0;
+            ACHIEVEMENTS.forEach(a => {
+                if (a.check(user)) {
+                    if (!user.achievements.includes(a.id)) {
+                        user.achievements.push(a.id);
+                        showToast(`🏅 Achievement Unlocked: ${a.name}!`, 'success');
+                    }
+                    unlocked++;
+                }
+            });
+            return unlocked;
+        }
+
+        // ============================================================
+        //  DAILY REWARD
+        // ============================================================
+        function checkDailyReward(user) {
+            const now = Date.now();
+            const last = user.lastDaily || 0;
+            const diff = now - last;
+            const oneDay = 24 * 60 * 60 * 1000;
+            if (diff >= oneDay) {
+                document.getElementById('dailyBtn').disabled = false;
+                document.getElementById('dailyBtn').innerHTML = '<i class="fas fa-hand-holding-heart"></i> Claim';
+                document.getElementById('dailyDesc').textContent = 'Claim your free bonus!';
+                return true;
+            } else {
+                const remaining = oneDay - diff;
+                const hours = Math.floor(remaining / (60 * 60 * 1000));
+                const mins = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+                document.getElementById('dailyBtn').disabled = true;
+                document.getElementById('dailyBtn').innerHTML =
+                    `<i class="fas fa-clock"></i> ${hours}h ${mins}m`;
+                document.getElementById('dailyDesc').textContent = `Next reward in ${hours}h ${mins}m`;
+                return false;
+            }
+        }
+
+        async function claimDailyReward() {
+            if (!currentUser) { showToast('Please log in.', 'error'); return; }
+            const now = Date.now();
+            const last = currentUser.lastDaily || 0;
+            if (now - last < 24 * 60 * 60 * 1000) {
+                showToast('Daily reward already claimed!', 'warning');
+                return;
+            }
+            const bonus = 200 + Math.floor(Math.random() * 150);
+            currentUser.balance = (currentUser.balance || 0) + bonus;
+            currentUser.lastDaily = now;
+            let cardMsg = '';
+            if (Math.random() < 0.35) {
+                const pool = RARITY_TIERS.slice(0, RARITY_TIERS.indexOf('LEGENDARY') + 1);
+                const rarity = randomFrom(pool);
+                const card = generateCard(rarity);
+                if (!currentUser.cards) currentUser.cards = [];
+                currentUser.cards.push(card);
+                cardMsg = ` You also found a ${rarity} card: ${card.name}!`;
+                showModal('🎁 Daily Bonus!', card, `Daily reward: +${bonus} PHP${cardMsg}`);
+            } else {
+                showToast(`💰 Daily reward: +${bonus} PHP!`, 'success');
+            }
+            try {
+                await saveDatabase(dbData);
+                renderUI(currentUser);
+                checkDailyReward(currentUser);
+            } catch (err) {
+                showToast('Failed to claim: ' + err.message, 'error');
+            }
+        }
+
+        // ============================================================
+        //  BATTLE SYSTEM – AGGRESSIVE & REALISTIC
+        // ============================================================
+        let selectedCardId = null;
+        let battleState = null;
+        let isBattleActive = false;
+
+        function startBattle(playerCard) {
+            if (!playerCard) { showToast('Select a card from your collection first!', 'warning'); return; }
+
+            const rarityPool = RARITY_TIERS;
+            const playerIdx = rarityPool.indexOf(playerCard.rarity);
+            const minIdx = Math.max(0, playerIdx - 2);
+            const maxIdx = Math.min(rarityPool.length - 1, playerIdx + 2);
+            const oppRarity = randomFrom(rarityPool.slice(minIdx, maxIdx + 1));
+            const oppCard = generateCard(oppRarity);
+
+            const scale = 0.82 + Math.random() * 0.36;
+            oppCard.attack = Math.max(1, Math.round(oppCard.attack * scale));
+            oppCard.defense = Math.max(1, Math.round(oppCard.defense * scale));
+            oppCard.health = Math.max(5, Math.round(oppCard.health * scale));
+            oppCard.maxHealth = oppCard.health;
+            oppCard.speed = Math.max(1, Math.round(oppCard.speed * scale));
+            oppCard.image = `https://picsum.photos/seed/${oppCard.id}/200/280`;
+
+            battleState = {
+                playerCard: { ...playerCard },
+                opponentCard: oppCard,
+                playerHp: playerCard.health,
+                opponentHp: oppCard.health,
+                playerMaxHp: playerCard.health,
+                opponentMaxHp: oppCard.health,
+                turn: 0,
+                log: [],
+                isDefending: false,
+                isSpecialUsed: false,
+                isPlayerTurn: true,
+                battleOver: false,
+                critChance: 0.20,
+                playerDefenseBuff: 0,
+                opponentDefenseBuff: 0,
+                damageMultiplier: 1.0
+            };
+            isBattleActive = true;
+            document.getElementById('battleResult').textContent = '';
+            document.getElementById('battleResult').className = 'battle-result';
+            renderBattle();
+            enableBattleButtons(true);
+            addBattleLog('⚔️ <span class="highlight">BATTLE START!</span> ' + playerCard.name + ' vs ' + oppCard.name);
+            const first = playerCard.speed >= oppCard.speed ? 'player' : 'opponent';
+            battleState.isPlayerTurn = first === 'player';
+            addBattleLog('💨 ' + (first === 'player' ? playerCard.name : oppCard.name) + ' <span class="special">goes first!</span>');
+            if (!battleState.isPlayerTurn) {
+                addBattleLog('🤖 <span class="highlight">AI moves first!</span>');
+                setTimeout(() => aiTurn(), 700);
+            } else {
+                addBattleLog('🎯 <span class="highlight">Your turn!</span>');
+            }
+            updateActionButtons();
+        }
+
+        function addBattleLog(msg) {
+            if (!battleState) return;
+            battleState.log.push(msg);
+            const logEl = document.getElementById('battleLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = msg;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            if (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
+        }
+
+        function renderBattle() {
+            if (!battleState) return;
+            const p = battleState.playerCard;
+            const o = battleState.opponentCard;
+            const pHp = battleState.playerHp;
+            const oHp = battleState.opponentHp;
+            const pMax = battleState.playerMaxHp;
+            const oMax = battleState.opponentMaxHp;
+
+            const pImg = p.image || `https://picsum.photos/seed/${p.id}/200/280`;
+            const oImg = o.image || `https://picsum.photos/seed/${o.id}/200/280`;
+
+            document.getElementById('playerCardDisplay').innerHTML = `
+                <img class="card-big-image" src="${pImg}" alt="${p.name}" onerror="this.src='https://picsum.photos/seed/${p.id}/200/280'" />
+                <div class="card-big-name">${p.typeIcon} ${p.name}</div>
+                <div class="card-big-rarity rarity-${p.rarity}" style="border:1px solid ${RARITY_COLORS[p.rarity]}40;background:${RARITY_COLORS[p.rarity]}10;color:${RARITY_COLORS[p.rarity]};">${p.rarity} · Lv.${p.level}</div>
+                <div class="card-big-stats">
+                    <span>⚔️ <span class="stat-val">${p.attack}</span></span>
+                    <span>🛡️ <span class="stat-val">${p.defense}</span></span>
+                    <span>❤️ <span class="stat-val">${Math.max(0,Math.round(pHp))}/${pMax}</span></span>
+                    <span>💨 <span class="stat-val">${p.speed}</span></span>
+                </div>
+                <div class="battle-hp-bar"><div class="hp-fill ${(pHp/pMax)<0.25?'critical':(pHp/pMax)<0.5?'low':''}" style="width:${Math.max(0,(pHp/pMax)*100)}%;"></div></div>
+                <div style="font-size:0.55rem;color:rgba(255,255,255,0.10);margin-top:3px;">${p.type}</div>
+                ${battleState.isDefending && battleState.isPlayerTurn ? '<div class="battle-status-badge defending"><i class="fas fa-shield-alt"></i> Defending</div>' : ''}
+                ${!battleState.isPlayerTurn && !battleState.battleOver ? '<div style="font-size:0.55rem;color:rgba(255,255,255,0.08);margin-top:3px;"><i class="fas fa-hourglass-half"></i> AI thinking...</div>' : ''}
+            `;
+
+            document.getElementById('opponentCardDisplay').innerHTML = `
+                <img class="card-big-image" src="${oImg}" alt="${o.name}" onerror="this.src='https://picsum.photos/seed/${o.id}/200/280'" />
+                <div class="card-big-name">${o.typeIcon} ${o.name}</div>
+                <div class="card-big-rarity rarity-${o.rarity}" style="border:1px solid ${RARITY_COLORS[o.rarity]}40;background:${RARITY_COLORS[o.rarity]}10;color:${RARITY_COLORS[o.rarity]};">${o.rarity} · Lv.${o.level}</div>
+                <div class="card-big-stats">
+                    <span>⚔️ <span class="stat-val">${o.attack}</span></span>
+                    <span>🛡️ <span class="stat-val">${o.defense}</span></span>
+                    <span>❤️ <span class="stat-val">${Math.max(0,Math.round(oHp))}/${oMax}</span></span>
+                    <span>💨 <span class="stat-val">${o.speed}</span></span>
+                </div>
+                <div class="battle-hp-bar"><div class="hp-fill ${(oHp/oMax)<0.25?'critical':(oHp/oMax)<0.5?'low':''}" style="width:${Math.max(0,(oHp/oMax)*100)}%;"></div></div>
+                <div style="font-size:0.55rem;color:rgba(255,255,255,0.10);margin-top:3px;">${o.type}</div>
+                ${!battleState.isDefending && !battleState.isPlayerTurn && !battleState.battleOver ? '<div class="battle-status-badge defending"><i class="fas fa-shield-alt"></i> Defending</div>' : ''}
+            `;
+
+            updateActionButtons();
+        }
+
+        function updateActionButtons() {
+            const canAct = isBattleActive && battleState && !battleState.battleOver && battleState.isPlayerTurn;
+            document.getElementById('btnAttack').disabled = !canAct;
+            document.getElementById('btnDefend').disabled = !canAct;
+            document.getElementById('btnSpecial').disabled = !canAct || battleState.isSpecialUsed;
+        }
+
+        function enableBattleButtons(enabled) {
+            if (!enabled) {
+                document.getElementById('btnAttack').disabled = true;
+                document.getElementById('btnDefend').disabled = true;
+                document.getElementById('btnSpecial').disabled = true;
+            } else {
+                updateActionButtons();
+            }
+        }
+
+        // ─── AGGRESSIVE ATTACK FUNCTIONS ───
+        function playerAttack() {
+            if (!battleState || battleState.battleOver || !battleState.isPlayerTurn) return;
+            const result = performAttack(battleState.playerCard, battleState.opponentCard, false, 'player');
+            battleState.opponentHp = Math.max(0, battleState.opponentHp - result.damage);
+            battleState.isDefending = false;
+            if (result.critical) {
+                addBattleLog(`💥 <span class="crit">CRITICAL!</span> ${battleState.playerCard.name} deals <span class="damage">${result.damage}</span> damage!`);
+            } else {
+                addBattleLog(`⚔️ ${battleState.playerCard.name} attacks for <span class="damage">${result.damage}</span> damage!`);
+            }
+            checkBattleEnd();
+            if (!battleState.battleOver) {
+                battleState.isPlayerTurn = false;
+                updateActionButtons();
+                setTimeout(() => aiTurn(), 600);
+            }
+            renderBattle();
+        }
+
+        function playerDefend() {
+            if (!battleState || battleState.battleOver || !battleState.isPlayerTurn) return;
+            battleState.isDefending = true;
+            const heal = Math.round(battleState.playerMaxHp * 0.06);
+            battleState.playerHp = Math.min(battleState.playerMaxHp, battleState.playerHp + heal);
+            addBattleLog(`🛡️ ${battleState.playerCard.name} defends! +${heal} HP`);
+            battleState.isPlayerTurn = false;
+            updateActionButtons();
+            setTimeout(() => aiTurn(), 600);
+            renderBattle();
+        }
+
+        function playerSpecial() {
+            if (!battleState || battleState.battleOver || !battleState.isPlayerTurn || battleState.isSpecialUsed) return;
+            const result = performAttack(battleState.playerCard, battleState.opponentCard, true, 'player');
+            battleState.opponentHp = Math.max(0, battleState.opponentHp - result.damage);
+            battleState.isSpecialUsed = true;
+            battleState.isDefending = false;
+            if (result.critical) {
+                addBattleLog(`💥 <span class="crit">CRITICAL SPECIAL!</span> ${battleState.playerCard.name} deals <span class="damage">${result.damage}</span> damage!`);
+            } else {
+                addBattleLog(`✨ ${battleState.playerCard.name} uses SPECIAL for <span class="damage">${result.damage}</span> damage!`);
+            }
+            checkBattleEnd();
+            if (!battleState.battleOver) {
+                battleState.isPlayerTurn = false;
+                updateActionButtons();
+                setTimeout(() => aiTurn(), 600);
+            }
+            renderBattle();
+        }
+
+        function performAttack(attacker, defender, isSpecial, who) {
+            let base = isSpecial ? attacker.attack * 2.2 : attacker.attack;
+            base = base * (0.80 + Math.random() * 0.40);
+            const crit = Math.random() < (battleState?.critChance || 0.20);
+            if (crit) base = base * 2.0;
+            let defense = defender.defense;
+            if (who === 'player' && battleState?.playerDefenseBuff) {
+                defense = Math.round(defense * (1 + battleState.playerDefenseBuff));
+            }
+            if (who === 'opponent' && battleState?.opponentDefenseBuff) {
+                defense = Math.round(defense * (1 + battleState.opponentDefenseBuff));
+            }
+            const reduction = defense / (defense + 35);
+            let dmg = Math.round(base * (1 - reduction));
+            dmg = Math.max(2, dmg + Math.round((Math.random() - 0.5) * 14));
+            if (isSpecial) dmg = Math.round(dmg * 1.15);
+            return { damage: dmg, critical: crit };
+        }
+
+        // ─── AI TURN ───
+        function aiTurn() {
+            if (!battleState || battleState.battleOver) return;
+            if (battleState.opponentHp <= 0) return;
+
+            const r = Math.random();
+            let action = 'attack';
+            const hpRatio = battleState.opponentHp / battleState.opponentMaxHp;
+
+            if (hpRatio < 0.20 && r < 0.55) {
+                action = 'defend';
+            } else if (!battleState.isSpecialUsed && r < 0.16) {
+                action = 'special';
+            } else if (r < 0.18) {
+                action = 'defend';
+            }
+
+            if (action === 'attack') {
+                const result = performAttack(battleState.opponentCard, battleState.playerCard, false, 'opponent');
+                let actualDmg = result.damage;
+                if (battleState.isDefending) {
+                    actualDmg = Math.round(result.damage * 0.20);
+                    addBattleLog(`🛡️ ${battleState.playerCard.name} blocks!`);
+                }
+                battleState.playerHp = Math.max(0, battleState.playerHp - actualDmg);
+                if (result.critical) {
+                    addBattleLog(`💥 <span class="crit">CRITICAL!</span> AI deals <span class="damage">${actualDmg}</span> damage!`);
+                } else {
+                    addBattleLog(`🤖 ${battleState.opponentCard.name} attacks for <span class="damage">${actualDmg}</span> damage!`);
+                }
+                battleState.isDefending = false;
+            } else if (action === 'defend') {
+                const heal = Math.round(battleState.opponentMaxHp * 0.05);
+                battleState.opponentHp = Math.min(battleState.opponentMaxHp, battleState.opponentHp + heal);
+                battleState.isDefending = true;
+                addBattleLog(`🛡️ AI defends! +${heal} HP`);
+            } else if (action === 'special') {
+                const result = performAttack(battleState.opponentCard, battleState.playerCard, true, 'opponent');
+                let actualDmg = result.damage;
+                if (battleState.isDefending) {
+                    actualDmg = Math.round(result.damage * 0.20);
+                    addBattleLog(`🛡️ ${battleState.playerCard.name} blocks!`);
+                }
+                battleState.playerHp = Math.max(0, battleState.playerHp - actualDmg);
+                battleState.isSpecialUsed = true;
+                if (result.critical) {
+                    addBattleLog(`💥 <span class="crit">CRITICAL SPECIAL!</span> AI deals <span class="damage">${actualDmg}</span> damage!`);
+                } else {
+                    addBattleLog(`✨ AI uses SPECIAL for <span class="damage">${actualDmg}</span> damage!`);
+                }
+                battleState.isDefending = false;
+            }
+
+            checkBattleEnd();
+            if (!battleState.battleOver) {
+                battleState.isPlayerTurn = true;
+                battleState.isDefending = false;
+                addBattleLog('🎯 <span class="highlight">Your turn!</span>');
+                updateActionButtons();
+            }
+            renderBattle();
+        }
+
+        function checkBattleEnd() {
+            if (!battleState) return;
+            if (battleState.playerHp <= 0) {
+                battleState.battleOver = true;
+                battleState.playerHp = 0;
+                endBattle('lose');
+                return;
+            }
+            if (battleState.opponentHp <= 0) {
+                battleState.battleOver = true;
+                battleState.opponentHp = 0;
+                endBattle('win');
+                return;
+            }
+            if (battleState.turn > 40) {
+                battleState.battleOver = true;
+                endBattle('draw');
+                return;
+            }
+            battleState.turn++;
+        }
+
+        function endBattle(result) {
+            isBattleActive = false;
+            enableBattleButtons(false);
+            const resultEl = document.getElementById('battleResult');
+
+            if (result === 'win') {
+                resultEl.textContent = '🏆 VICTORY!';
+                resultEl.className = 'battle-result win';
+                addBattleLog('🎉 <span class="highlight">YOU WON!</span>');
+                const goldReward = 100 + Math.floor(Math.random() * 150);
+                const cardDrop = Math.random() < 0.28;
+                if (currentUser) {
+                    currentUser.balance = (currentUser.balance || 0) + goldReward;
+                    if (!currentUser.battleStats) currentUser.battleStats = { wins: 0, losses: 0, draws: 0 };
+                    currentUser.battleStats.wins = (currentUser.battleStats.wins || 0) + 1;
+                    currentUser.streak = (currentUser.streak || 0) + 1;
+                    if (battleState.playerCard) {
+                        const owned = currentUser.cards.find(c => c.id === battleState.playerCard.id);
+                        if (owned) { owned.wins = (owned.wins || 0) + 1; }
+                    }
+                    let cardMsg = '';
+                    if (cardDrop) {
+                        const pool = RARITY_TIERS.slice(0, RARITY_TIERS.indexOf('LEGENDARY') + 1);
+                        const dropRarity = randomFrom(pool);
+                        const newCard = generateCard(dropRarity);
+                        currentUser.cards.push(newCard);
+                        cardMsg = ` You also found a ${dropRarity} card: ${newCard.name}!`;
+                        showModal('🎁 Card Found!', newCard, `A ${dropRarity} card has been added to your collection!`);
+                    }
+                    checkAchievements(currentUser);
+                    saveDatabase(dbData);
+                    renderUI(currentUser);
+                    showToast(`💰 +${goldReward} PHP${cardMsg}`, 'success');
+                }
+            } else if (result === 'lose') {
+                resultEl.textContent = '💀 DEFEATED';
+                resultEl.className = 'battle-result lose';
+                addBattleLog('😵 <span class="damage">You lost the battle.</span>');
+                if (currentUser) {
+                    const goldReward = 20 + Math.floor(Math.random() * 30);
+                    currentUser.balance = (currentUser.balance || 0) + goldReward;
+                    if (!currentUser.battleStats) currentUser.battleStats = { wins: 0, losses: 0, draws: 0 };
+                    currentUser.battleStats.losses = (currentUser.battleStats.losses || 0) + 1;
+                    currentUser.streak = 0;
+                    checkAchievements(currentUser);
+                    saveDatabase(dbData);
+                    renderUI(currentUser);
+                    showToast(`💔 Lost. +${goldReward} PHP consolation.`, 'warning');
+                }
+            } else {
+                resultEl.textContent = '🤝 DRAW!';
+                resultEl.className = 'battle-result draw';
+                addBattleLog('🤝 The battle ended in a draw.');
+                if (currentUser) {
+                    const goldReward = 40 + Math.floor(Math.random() * 50);
+                    currentUser.balance = (currentUser.balance || 0) + goldReward;
+                    if (!currentUser.battleStats) currentUser.battleStats = { wins: 0, losses: 0, draws: 0 };
+                    currentUser.battleStats.draws = (currentUser.battleStats.draws || 0) + 1;
+                    currentUser.streak = 0;
+                    checkAchievements(currentUser);
+                    saveDatabase(dbData);
+                    renderUI(currentUser);
+                    showToast(`🤝 Draw. +${goldReward} PHP.`, 'info');
+                }
+            }
+            renderBattle();
+            document.getElementById('statStreak').textContent = currentUser?.streak || 0;
+        }
+
+        // ─── BATTLE BUTTONS ───
+        document.getElementById('btnAttack').addEventListener('click', playerAttack);
+        document.getElementById('btnDefend').addEventListener('click', playerDefend);
+        document.getElementById('btnSpecial').addEventListener('click', playerSpecial);
+        document.getElementById('btnFlee').addEventListener('click', function() {
+            if (!isBattleActive) { showToast('No battle in progress.', 'info'); return; }
+            if (battleState && battleState.battleOver) { showToast('Battle already ended.', 'info'); return; }
+            battleState.battleOver = true;
+            isBattleActive = false;
+            enableBattleButtons(false);
+            addBattleLog('🏃 <span class="special">You fled the battle!</span>');
+            document.getElementById('battleResult').textContent = '🏃 Fled';
+            document.getElementById('battleResult').className = 'battle-result fled';
+            if (currentUser) { currentUser.streak = 0;
+                saveDatabase(dbData);
+                renderUI(currentUser); }
+            showToast('You fled the battle.', 'info');
+            renderBattle();
+        });
+
+        // ─── DAILY REWARD BUTTON ───
+        document.getElementById('dailyBtn').addEventListener('click', claimDailyReward);
+
+        // ============================================================
+        //  UI RENDER
+        // ============================================================
+        function renderUI(user) {
+            if (!user) return;
+            document.getElementById('dashAvatar').textContent = user.name ? user.name.split(' ').map(w => w[0]).join('')
+                .toUpperCase().slice(0, 2) : 'U';
+            document.getElementById('dashName').textContent = user.name || 'User';
+            document.getElementById('dashEmail').textContent = user.email || 'user@casino.io';
+            document.getElementById('navBalance').textContent = (user.balance || 0).toFixed(2);
+
+            const stats = user.battleStats || { wins: 0, losses: 0, draws: 0 };
+            document.getElementById('statWins').textContent = stats.wins || 0;
+            document.getElementById('statLosses').textContent = stats.losses || 0;
+            document.getElementById('statDraws').textContent = stats.draws || 0;
+            document.getElementById('statCards').textContent = (user.cards || []).length;
+            document.getElementById('statStreak').textContent = user.streak || 0;
+
+            renderCollection(user);
+            renderStore(user);
+            renderAchievements(user);
+            checkDailyReward(user);
+
+            if (!isBattleActive && selectedCardId) {
+                const card = user.cards.find(c => c.id === selectedCardId);
+                if (card) {
+                    const imgSrc = card.image || `https://picsum.photos/seed/${card.id}/200/280`;
+                    document.getElementById('playerCardDisplay').innerHTML = `
+                        <img class="card-big-image" src="${imgSrc}" alt="${card.name}" onerror="this.src='https://picsum.photos/seed/${card.id}/200/280'" />
+                        <div style="font-size:0.6rem;color:rgba(255,255,255,0.15);margin-bottom:3px;"><i class="fas fa-check-circle" style="color:#34d399;"></i> Ready</div>
+                        <div class="card-big-name">${card.typeIcon} ${card.name}</div>
+                        <div class="card-big-rarity rarity-${card.rarity}" style="border:1px solid ${RARITY_COLORS[card.rarity]}40;background:${RARITY_COLORS[card.rarity]}10;color:${RARITY_COLORS[card.rarity]};">${card.rarity} · Lv.${card.level}</div>
+                        <div class="card-big-stats">
+                            <span>⚔️ <span class="stat-val">${card.attack}</span></span>
+                            <span>🛡️ <span class="stat-val">${card.defense}</span></span>
+                            <span>❤️ <span class="stat-val">${card.health}</span></span>
+                            <span>💨 <span class="stat-val">${card.speed}</span></span>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(255,255,255,0.10);margin-top:3px;">${card.type}</div>
+                        <button class="card-select selected" style="margin-top:6px;padding:6px 20px;border-radius:100px;border:none;background:linear-gradient(135deg,#fbbf24,#b8860b);color:#0b0719;font-weight:700;font-size:0.7rem;cursor:pointer;transition:0.3s;" onclick="startBattleWithSelected()">
+                            <i class="fas fa-sword"></i> BATTLE!
+                        </button>
+                    `;
+                }
+            }
+        }
+
+        function renderCollection(user) {
+            const grid = document.getElementById('collectionGrid');
+            const cards = user.cards || [];
+            const rarityFilter = document.getElementById('filterRarity').value;
+            const typeFilter = document.getElementById('filterType').value;
+
+            let filtered = cards;
+            if (rarityFilter !== 'all') filtered = filtered.filter(c => c.rarity === rarityFilter);
+            if (typeFilter !== 'all') filtered = filtered.filter(c => c.type === typeFilter);
+
+            document.getElementById('collectionCount').textContent = filtered.length + ' / ' + cards.length + ' cards';
+
+            if (filtered.length === 0) {
+                grid.innerHTML =
+                    `<div class="no-cards"><i class="fas fa-id-card"></i><div class="empty-title">${cards.length === 0 ? 'No cards in your collection' : 'No cards match filters'}</div><div class="empty-desc">${cards.length === 0 ? 'Visit the Store to buy some!' : 'Try changing your filters'}</div></div>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(card => {
+                const isSelected = card.id === selectedCardId;
+                const rarityColor = RARITY_COLORS[card.rarity] || '#8a8a8a';
+                const cost = getUpgradeCost(card);
+                const canUpgrade = (user.balance || 0) >= cost && card.level < 25;
+                const imgSrc = card.image || `https://picsum.photos/seed/${card.id}/200/280`;
+                const glowClass = 'card-glow-' + card.rarity;
+                html += `
+                    <div class="card-item ${glowClass}" style="border-color:${isSelected ? rarityColor + '80' : 'rgba(255,215,0,0.04)'};${isSelected ? 'box-shadow: 0 0 30px ' + rarityColor + '30;' : ''}">
+                        <div class="card-image-wrap">
+                            <img src="${imgSrc}" alt="${card.name}" onerror="this.src='https://picsum.photos/seed/${card.id}/200/280'" />
+                            <div class="card-type-icon">${card.typeIcon}</div>
+                        </div>
+                        <div class="card-rarity rarity-${card.rarity}">${card.rarity}</div>
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-type">${card.type} · Lv.${card.level}</div>
+                        <div class="card-stats">
+                            <span>⚔️ <span class="stat-val">${card.attack}</span></span>
+                            <span>🛡️ <span class="stat-val">${card.defense}</span></span>
+                            <span>❤️ <span class="stat-val">${card.health}</span></span>
+                            <span>💨 <span class="stat-val">${card.speed}</span></span>
+                        </div>
+                        <div class="card-level">Wins: ${card.wins || 0} · XP: ${card.xp || 0}</div>
+                        <div class="card-actions">
+                            <button class="btn-select ${isSelected ? 'selected' : ''}" onclick="selectCard('${card.id}')">
+                                ${isSelected ? '✅ Selected' : 'Select'}
+                            </button>
+                            <button class="btn-upgrade" onclick="upgradeCardAction('${card.id}')" ${canUpgrade ? '' : 'disabled'}>
+                                ⬆ ${cost} PHP
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function renderStore(user) {
+            const grid = document.getElementById('storeGrid');
+            const balance = user.balance || 0;
+            let html = '';
+            RARITY_TIERS.forEach(rarity => {
+                const price = RARITY_PRICES[rarity];
+                const color = RARITY_COLORS[rarity];
+                const canAfford = balance >= price;
+                const descMap = {
+                    'COMMON': '🪨 Solid foundation for any deck',
+                    'UNCOMMON': '✨ Notable strength and versatility',
+                    'RARE': '💎 Exceptional power and rarity',
+                    'EPIC': '🏅 Heroic might, a cut above',
+                    'ANCIENT': '⏳ Timeless wisdom and power',
+                    'DRAGON': '🐉 Ancient fury, devastating force',
+                    'LEGENDARY': '🌟 Mythical might, near-unstoppable',
+                    'TITAN': '⚡ God-like strength, earth-shaking',
+                    'IMMORTAL': '☀️ Ultimate power, eternal and absolute'
+                };
+                const statsMap = {
+                    'COMMON': 'ATK 35-65 · HP 70-130',
+                    'UNCOMMON': 'ATK 50-85 · HP 95-175',
+                    'RARE': 'ATK 70-115 · HP 130-230',
+                    'EPIC': 'ATK 95-155 · HP 170-300',
+                    'ANCIENT': 'ATK 125-200 · HP 220-400',
+                    'DRAGON': 'ATK 160-260 · HP 280-520',
+                    'LEGENDARY': 'ATK 200-330 · HP 350-650',
+                    'TITAN': 'ATK 260-420 · HP 450-800',
+                    'IMMORTAL': 'ATK 340-540 · HP 580-1000'
+                };
+                html += `
+                    <div class="store-item">
+                        <div class="store-rarity" style="border:1px solid ${color}40;background:${color}10;color:${color};">${rarity}</div>
+                        <div class="store-name">${rarity} Pack</div>
+                        <div class="store-price"><i class="fas fa-coins"></i> ${price.toLocaleString()} PHP</div>
+                        <div class="store-stats">${statsMap[rarity] || ''}</div>
+                        <div class="store-desc">${descMap[rarity] || ''}</div>
+                        <button class="btn-buy" onclick="buyCard('${rarity}')" ${canAfford ? '' : 'disabled'}>
+                            ${canAfford ? '<i class="fas fa-shopping-cart"></i> Buy' : '💰 Insufficient'}
+                        </button>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function renderAchievements(user) {
+            const grid = document.getElementById('achievementGrid');
+            const unlocked = user.achievements || [];
+            let html = '';
+            ACHIEVEMENTS.forEach(a => {
+                const isUnlocked = unlocked.includes(a.id);
+                html += `
+                    <div class="achievement-item ${isUnlocked ? 'unlocked' : 'locked'}">
+                        <div class="ach-icon ${isUnlocked ? 'unlocked' : 'locked'}">${a.icon}</div>
+                        <div class="ach-info">
+                            <div class="ach-name">${a.name}</div>
+                            <div class="ach-desc">${a.desc}</div>
+                            <div class="ach-progress">${isUnlocked ? '✅ Unlocked' : '🔒 Locked'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // ============================================================
+        //  GAME ACTIONS
+        // ============================================================
+        function selectCard(cardId) {
+            if (isBattleActive) { showToast('Cannot change card during battle!', 'warning'); return; }
+            selectedCardId = cardId;
+            if (currentUser) renderUI(currentUser);
+            const card = currentUser.cards.find(c => c.id === cardId);
+            if (card) {
+                const imgSrc = card.image || `https://picsum.photos/seed/${card.id}/200/280`;
+                document.getElementById('playerCardDisplay').innerHTML = `
+                    <img class="card-big-image" src="${imgSrc}" alt="${card.name}" onerror="this.src='https://picsum.photos/seed/${card.id}/200/280'" />
+                    <div style="font-size:0.6rem;color:rgba(255,255,255,0.15);margin-bottom:3px;"><i class="fas fa-check-circle" style="color:#34d399;"></i> Ready</div>
+                    <div class="card-big-name">${card.typeIcon} ${card.name}</div>
+                    <div class="card-big-rarity rarity-${card.rarity}" style="border:1px solid ${RARITY_COLORS[card.rarity]}40;background:${RARITY_COLORS[card.rarity]}10;color:${RARITY_COLORS[card.rarity]};">${card.rarity} · Lv.${card.level}</div>
+                    <div class="card-big-stats">
+                        <span>⚔️ <span class="stat-val">${card.attack}</span></span>
+                        <span>🛡️ <span class="stat-val">${card.defense}</span></span>
+                        <span>❤️ <span class="stat-val">${card.health}</span></span>
+                        <span>💨 <span class="stat-val">${card.speed}</span></span>
+                    </div>
+                    <div style="font-size:0.55rem;color:rgba(255,255,255,0.10);margin-top:3px;">${card.type}</div>
+                    <button class="card-select selected" style="margin-top:6px;padding:6px 20px;border-radius:100px;border:none;background:linear-gradient(135deg,#fbbf24,#b8860b);color:#0b0719;font-weight:700;font-size:0.7rem;cursor:pointer;transition:0.3s;" onclick="startBattleWithSelected()">
+                        <i class="fas fa-sword"></i> BATTLE!
+                    </button>
+                `;
+                showToast(`✅ Selected: ${card.name}`, 'success');
+            }
+        }
+
+        function startBattleWithSelected() {
+            if (!selectedCardId) { showToast('Select a card first!', 'warning'); return; }
+            if (isBattleActive) { showToast('Battle already in progress!', 'warning'); return; }
+            const card = currentUser.cards.find(c => c.id === selectedCardId);
+            if (!card) { showToast('Card not found!', 'error'); return; }
+            startBattle(card);
+        }
+
+        async function buyCard(rarity) {
+            if (!currentUser) { showToast('Please log in.', 'error'); return; }
+            const price = RARITY_PRICES[rarity];
+            if ((currentUser.balance || 0) < price) { showToast('Insufficient balance!', 'error'); return; }
+            const card = generateCard(rarity);
+            currentUser.balance = (currentUser.balance || 0) - price;
+            if (!currentUser.cards) currentUser.cards = [];
+            currentUser.cards.push(card);
+            try {
+                await saveDatabase(dbData);
+                renderUI(currentUser);
+                checkAchievements(currentUser);
+                showModal('🛒 Card Purchased!', card, `You bought a ${rarity} card for ${price.toLocaleString()} PHP!`);
+                showToast(`✅ ${card.name} added to your collection!`, 'success');
+            } catch (err) {
+                showToast('Purchase failed: ' + err.message, 'error');
+            }
+        }
+
+        async function upgradeCardAction(cardId) {
+            if (!currentUser) { showToast('Please log in.', 'error'); return; }
+            const card = currentUser.cards.find(c => c.id === cardId);
+            if (!card) { showToast('Card not found.', 'error'); return; }
+            const cost = getUpgradeCost(card);
+            if ((currentUser.balance || 0) < cost) { showToast('Insufficient balance for upgrade!', 'error'); return; }
+            if (card.level >= 25) { showToast('Max level reached!', 'warning'); return; }
+            currentUser.balance = (currentUser.balance || 0) - cost;
+            upgradeCard(card);
+            try {
+                await saveDatabase(dbData);
+                renderUI(currentUser);
+                checkAchievements(currentUser);
+                showToast(`⬆️ ${card.name} upgraded to Lv.${card.level}! (${cost} PHP)`, 'success');
+            } catch (err) {
+                showToast('Upgrade failed: ' + err.message, 'error');
+            }
+        }
+
+        // ============================================================
+        //  MODAL
+        // ============================================================
+        function showModal(title, card, desc) {
+            document.getElementById('modalTitle').innerHTML = title;
+            const imgSrc = card.image || `https://picsum.photos/seed/${card.id}/200/280`;
+            document.getElementById('modalCardImage').src = imgSrc;
+            document.getElementById('modalCardImage').onerror = function() {
+                this.src = `https://picsum.photos/seed/${card.id}/200/280`;
+            };
+            document.getElementById('modalCardName').textContent = card.typeIcon + ' ' + card.name;
+            document.getElementById('modalCardRarity').textContent = card.rarity + ' · Lv.' + card.level;
+            document.getElementById('modalCardRarity').className = 'mc-rarity rarity-' + card.rarity;
+            document.getElementById('modalAtk').textContent = card.attack;
+            document.getElementById('modalDef').textContent = card.defense;
+            document.getElementById('modalHp').textContent = card.health;
+            document.getElementById('modalSpd').textContent = card.speed;
+            document.getElementById('modalDesc').textContent = desc || 'A powerful card has been added to your collection!';
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        document.getElementById('modalConfirm').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('active');
+        });
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('modalOverlay').classList.remove('active');
+        });
+
+        // ============================================================
+        //  TOAST
+        // ============================================================
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            const m = document.getElementById('toastMessage');
+            const icon = t.querySelector('i');
+            t.className = 'toast ' + type;
+            const icons = { success: 'fas fa-check-circle', error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle', info: 'fas fa-info-circle' };
+            icon.className = icons[type] || icons.info;
+            m.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ============================================================
+        //  TABS
+        // ============================================================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                const target = document.getElementById(this.dataset.tab);
+                if (target) target.classList.add('active');
+                if (this.dataset.tab === 'tabCollection' && currentUser) renderCollection(currentUser);
+                if (this.dataset.tab === 'tabStore' && currentUser) renderStore(currentUser);
+                if (this.dataset.tab === 'tabAchievements' && currentUser) renderAchievements(currentUser);
+            });
+        });
+        
+        document.getElementById('filterRarity').addEventListener('change', () => {
+            if (currentUser) renderCollection(currentUser);
+        });
+        document.getElementById('filterType').addEventListener('change', () => {
+            if (currentUser) renderCollection(currentUser);
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('auth_user');
+            showToast('Logged out', 'info');
+            setTimeout(() => window.location.href = 'index.html', 350);
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        (async function init() {
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                showToast('GitHub token required.', 'info');
+                setDbStatus('offline', 'no token');
+                showAuthOverlay(true);
+                return;
+            }
+            const success = await loadDatabase(true);
+            if (!success) {
+                showAuthOverlay(true);
+            }
+            if (currentUser && (!currentUser.cards || currentUser.cards.length === 0)) {
+                setTimeout(() => {
+                    showToast('🃏 Visit the Store to buy your first cards!', 'info');
+                }, 800);
+            }
+        })();
+
+        window.selectCard = selectCard;
+        window.startBattleWithSelected = startBattleWithSelected;
+        window.buyCard = buyCard;
+        window.upgradeCardAction = upgradeCardAction;
+
+        console.log('⚔️ Card Battler v4.0 – AGGRESSIVE FORCE with REALISTIC ONLINE IMAGES');
+    </script>
+
+</body>
+</html>

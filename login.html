@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px 35px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header .logo {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-header h1 {
+            color: #fff;
+            font-size: 1.7rem;
+            font-weight: 600;
+        }
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: 0.3s;
+        }
+        .input-wrapper:focus-within {
+            border-color: rgba(167, 139, 250, 0.6);
+            box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .input-wrapper i {
+            color: rgba(255, 255, 255, 0.3);
+            padding: 0 14px;
+            font-size: 0.95rem;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .input-wrapper .toggle-password {
+            padding: 0 14px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.25);
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+        }
+        .input-wrapper .toggle-password:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .error-msg {
+            color: #f87171;
+            font-size: 0.75rem;
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+        .error-msg.show {
+            display: flex;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 6px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 22px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+        .auth-footer a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .auth-footer a:hover {
+            color: #c4b5fd;
+            text-decoration: underline;
+        }
+        /* ---- Loader / Status Card ---- */
+        .loader-card {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 16px;
+            transition: 0.3s;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader-card .status-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 14px;
+        }
+        .loader-card .status-icon.spinning {
+            animation: spin 1.2s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loader-card .status-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+        }
+        .loader-card .status-desc {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        .loader-card .status-detail {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            margin-top: 10px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .loader-card .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .loader-card .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .loader-card .retry-area {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .loader-card .retry-area .btn-sm {
+            padding: 10px 28px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .loader-card .retry-area .btn-sm-primary {
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+        }
+        .loader-card .retry-area .btn-sm-primary:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+        }
+        .loader-card .retry-area .btn-sm-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .loader-card .retry-area .btn-sm-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(167, 139, 250, 0.4);
+            color: #fff;
+        }
+        /* ---- Toast ---- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 28px;
+            border-radius: 16px;
+            background: rgba(30, 27, 58, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 0.9rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .toast.success {
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+        .toast.success i {
+            color: #34d399;
+        }
+        .toast.error {
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+        .toast.error i {
+            color: #f87171;
+        }
+        .toast.info {
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+        .toast.info i {
+            color: #60a5fa;
+        }
+        .toast.warning {
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+        .toast.warning i {
+            color: #fbbf24;
+        }
+        @media (max-width: 540px) {
+            .container {
+                padding: 28px 20px;
+            }
+            .loader-card {
+                min-height: 200px;
+                padding: 30px 16px;
+            }
+            .loader-card .status-icon {
+                font-size: 2.4rem;
+            }
+            .loader-card .status-title {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .loader-card {
+                min-height: 160px;
+                padding: 20px 12px;
+            }
+            .loader-card .status-icon {
+                font-size: 1.8rem;
+            }
+            .loader-card .status-title {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="auth-header">
+            <div class="logo"><i class="fas fa-lock"></i></div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to your account</p>
+        </div>
+
+        <!-- ====== STATUS / LOADER CARD ====== -->
+        <div id="statusCard" class="loader-card">
+            <span class="status-icon" id="statusIcon"><i class="fas fa-database"></i></span>
+            <div class="status-title" id="statusTitle">Initializing…</div>
+            <div class="status-desc" id="statusDesc">Please wait while we connect to the database.</div>
+            <div class="status-detail" id="statusDetail"></div>
+            <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+            <div class="retry-area" id="retryArea" style="display:none;">
+                <button class="btn-sm btn-sm-primary" id="retryBtn"><i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry</button>
+            </div>
+        </div>
+
+        <!-- ====== LOGIN FORM (hidden until DB loads) ====== -->
+        <form id="loginForm" style="display:none;">
+            <div class="form-group">
+                <label>Email or Username</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="loginEmail" placeholder="Enter email or username" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required />
+                    <button type="button" class="toggle-password" onclick="togglePass('loginPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error-msg" id="loginError"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+            </div>
+            <button type="submit" class="btn-primary"><i class="fas fa-arrow-right-to-bracket" style="margin-right:8px;"></i>Sign In</button>
+        </form>
+
+        <div class="auth-footer" id="authFooter" style="display:none;">
+            Don't have an account? <a href="register.html">Create one</a>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Success</span></div>
+
+    <script>
+        // ============================================================
+        //  SECURITY: block F12, right-click, view source
+        // ============================================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+        });
+
+        // ============================================================
+        //  CONSTANTS
+        // ============================================================
+        const ENCRYPTION_KEY_HASH = '$2a$12$tLvlRpTmRlBdGSUBZ8.phe4dOfl09CcFEp2cjG.U8lpPKvtwku5N6';
+        const GITHUB_OWNER = 'tcute6851';              // ⚙️ YOUR GITHUB USERNAME
+        const GITHUB_REPO = 'Arvroyal-Casino-Games';    // ⚙️ YOUR REPOSITORY NAME
+        const GITHUB_PATH = 'CasinoDB.json';
+        const GITHUB_TOKEN_KEY = 'github_pat';
+
+        let dbData = { users: [] };
+        let _githubSha = null;
+        let _defaultBranch = 'main'; // will be detected
+
+        // ---- DOM refs ----
+        const statusCard = document.getElementById('statusCard');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDesc = document.getElementById('statusDesc');
+        const statusDetail = document.getElementById('statusDetail');
+        const progressFill = document.getElementById('progressFill');
+        const retryArea = document.getElementById('retryArea');
+        const retryBtn = document.getElementById('retryBtn');
+        const loginForm = document.getElementById('loginForm');
+        const authFooter = document.getElementById('authFooter');
+
+        // ---- Crypto helpers ----
+        async function deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+            return crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        async function encryptData(plaintext) {
+            const enc = new TextEncoder();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, enc.encode(plaintext));
+            const parts = [
+                btoa(String.fromCharCode(...salt)),
+                btoa(String.fromCharCode(...iv)),
+                btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+            ];
+            return parts.join(':');
+        }
+
+        async function decryptData(encryptedString) {
+            const parts = encryptedString.split(':');
+            if (parts.length !== 3) throw new Error('Invalid encrypted format');
+            const salt = Uint8Array.from(atob(parts[0]), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(parts[1]), c => c.charCodeAt(0));
+            const ciphertext = Uint8Array.from(atob(parts[2]), c => c.charCodeAt(0));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ciphertext);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ---- GitHub helpers ----
+        function getGitHubToken() {
+            let token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                token = prompt('🔑 Enter your Web app password for security purposes:');
+                if (token) {
+                    localStorage.setItem(GITHUB_TOKEN_KEY, token);
+                }
+            }
+            return token;
+        }
+
+        function clearToken() {
+            localStorage.removeItem(GITHUB_TOKEN_KEY);
+        }
+
+        async function detectDefaultBranch(token) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+                const resp = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    return data.default_branch || 'main';
+                }
+            } catch {}
+            return 'main'; // fallback
+        }
+
+        async function createEmptyDatabase(token, branch) {
+            const emptyData = { users: [] };
+            const json = JSON.stringify(emptyData, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Initialize CasinoDB.json',
+                    content: content,
+                    branch: branch
+                })
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`GitHub API error (${response.status}): ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+        }
+
+        async function loadDatabase(showToastMsg = true) {
+            let token = getGitHubToken();
+            if (!token) {
+                updateStatus('❌', '❌', 'Token Required', 'Please enter your GitHub token to continue.', 'Click "Retry" to try again.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('GitHub token required.', 'error');
+                showUI(false);
+                return false;
+            }
+
+            try {
+                updateStatus('spinning', '📡', 'Connecting to GitHub…', 'Fetching database from repository…');
+                setProgress(20);
+
+                // Detect default branch first
+                const branch = await detectDefaultBranch(token);
+                _defaultBranch = branch;
+                console.log('Default branch:', branch);
+
+                setProgress(40);
+
+                const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.status === 404) {
+                    updateStatus('spinning', '📝', 'Creating database…', 'No database found. Creating new one…');
+                    setProgress(60);
+                    await createEmptyDatabase(token, branch);
+                    dbData = { users: [] };
+                    setProgress(100);
+                    if (showToastMsg) showToast('✅ New database created on GitHub!', 'success');
+                    showUI(true);
+                    await checkSession();
+                    return true;
+                }
+
+                if (response.status === 401) {
+                    clearToken();
+                    updateStatus('❌', '❌', 'Invalid Token', 'Your GitHub token is invalid or expired.', 'Click "Retry" to enter a new token.');
+                    showRetryButtons(true);
+                    if (showToastMsg) showToast('Invalid GitHub token. Please try again.', 'error');
+                    showUI(false);
+                    return false;
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const msg = errorData.message || response.statusText;
+                    throw new Error(`GitHub API error (${response.status}): ${msg}`);
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                _githubSha = data.sha;
+
+                let json;
+                try {
+                    const decrypted = await decryptData(content);
+                    json = JSON.parse(decrypted);
+                } catch {
+                    json = JSON.parse(content);
+                }
+                dbData = json;
+                setProgress(100);
+                if (showToastMsg) showToast('✅ Your access granted is successful!', 'success');
+                showUI(true);
+                await checkSession();
+                return true;
+            } catch (error) {
+                console.error('loadDatabase error:', error);
+                const errorMsg = error.message || 'Could not connect to GitHub.';
+                updateStatus('❌', '❌', 'Loading Failed', errorMsg, 'Check your internet connection and token.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('Failed to load database: ' + errorMsg, 'error');
+                showUI(false);
+                return false;
+            }
+        }
+
+        async function saveDatabase(data) {
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                showToast('No GitHub token found.', 'error');
+                return;
+            }
+
+            const json = JSON.stringify(data, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Update CasinoDB.json',
+                    content: content,
+                    sha: _githubSha,
+                    branch: _defaultBranch
+                })
+            });
+
+            if (response.status === 401) {
+                clearToken();
+                showToast('GitHub token expired. Please refresh the page and enter a new token.', 'error');
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`Failed to save: ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+            console.log('✅ Database saved to GitHub');
+        }
+
+        // ---- Status UI helpers ----
+        function updateStatus(iconType, iconHtml, title, desc, detail = '') {
+            if (iconType === 'spinning') {
+                statusIcon.className = 'status-icon spinning';
+                statusIcon.innerHTML = iconHtml;
+            } else {
+                statusIcon.className = 'status-icon';
+                statusIcon.innerHTML = iconHtml;
+            }
+            statusTitle.textContent = title;
+            statusDesc.textContent = desc;
+            statusDetail.textContent = detail;
+        }
+
+        function setProgress(pct) {
+            progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+        }
+
+        function showRetryButtons(show = true) {
+            retryArea.style.display = show ? 'flex' : 'none';
+        }
+
+        function showUI(hasFile) {
+            if (hasFile) {
+                statusCard.style.display = 'none';
+                loginForm.style.display = 'block';
+                authFooter.style.display = 'block';
+            } else {
+                statusCard.style.display = 'flex';
+                loginForm.style.display = 'none';
+                authFooter.style.display = 'none';
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            const m = document.getElementById('toastMessage');
+            const icon = t.querySelector('i');
+            t.className = 'toast ' + type;
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            icon.className = icons[type] || icons.info;
+            m.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ---- Retry logic ----
+        retryBtn.addEventListener('click', async function() {
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying…';
+            clearToken(); // force re‑entry of token
+            const success = await loadDatabase(true);
+            if (!success) {
+                // If still fails, show the retry button again
+                showRetryButtons(true);
+            }
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry';
+        });
+
+        // ---- Login ----
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const input = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+            errorEl.classList.remove('show');
+
+            if (!input || !password) {
+                errorEl.querySelector('span').textContent = 'Please fill in all fields';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            try {
+                const users = dbData.users || [];
+                const user = users.find(u => u.email === input || u.username === input);
+                if (!user) {
+                    errorEl.querySelector('span').textContent = 'No account found';
+                    errorEl.classList.add('show');
+                    return;
+                }
+                if (!verifyPassword(password, user.password)) {
+                    errorEl.querySelector('span').textContent = 'Incorrect password';
+                    errorEl.classList.add('show');
+                    return;
+                }
+                sessionStorage.setItem('auth_user', JSON.stringify(user));
+                showToast('Welcome, ' + user.name + '!', 'success');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+            } catch (e) {
+                errorEl.querySelector('span').textContent = 'Database error: ' + e.message;
+                errorEl.classList.add('show');
+            }
+        });
+
+        // ---- Helpers ----
+        function hashPassword(pw) {
+            let hash = 0;
+            for (let i = 0; i < pw.length; i++) {
+                const char = pw.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'hashed_' + hash;
+        }
+
+        function verifyPassword(input, stored) {
+            return hashPassword(input) === stored;
+        }
+
+        function togglePass(id, btn) {
+            const inp = document.getElementById(id);
+            const icon = btn.querySelector('i');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // ---- Session check ----
+        async function checkSession() {
+            const saved = sessionStorage.getItem('auth_user');
+            if (saved) {
+                try {
+                    const user = JSON.parse(saved);
+                    const exists = (dbData.users || []).find(u => u.id === user.id);
+                    if (exists) {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    } else {
+                        sessionStorage.removeItem('auth_user');
+                    }
+                } catch { sessionStorage.removeItem('auth_user'); }
+            }
+        }
+
+        // ---- Init ----
+        (async function init() {
+            showUI(false);
+            updateStatus('spinning', '📡', 'Connecting to Web app…', 'Loading database from repository…');
+            setProgress(10);
+
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                updateStatus('🔑', '🔑', 'Web app Password Required', 'Please enter your Web app password for security purposes.',
+                    'Click "Retry" to enter your password.');
+                showRetryButtons(true);
+                showToast('Web app Password Required.', 'info');
+            } else {
+                const success = await loadDatabase(true);
+                if (!success) {
+                    showRetryButtons(true);
+                }
+            }
+        })();
+
+
+        console.log('🔐 Login page initialized (GitHub database).');
+    </script>
+
+</body>
+</html>

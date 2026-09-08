@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>ArvRoyal Casino – Where Royals Play</title>
+
+    <!-- Link to your existing CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 (Free Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0705;
+            color: #f0e6d3;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ---------- GLOW ORBS (Background Flair) ---------- */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .glow-orb.orb1 {
+            width: 500px;
+            height: 500px;
+            background: #c9a84c;
+            top: -20%;
+            left: -20%;
+        }
+        .glow-orb.orb2 {
+            width: 600px;
+            height: 600px;
+            background: #7a5c2a;
+            bottom: -30%;
+            right: -20%;
+        }
+
+        /* ---------- NAVIGATION (Mobile-First) ---------- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 7, 5, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+            z-index: 1000;
+            min-height: 68px;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #f9e58b, #c9a84c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+        .nav-logo span {
+            font-weight: 400;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: #b8a58a;
+            -webkit-text-fill-color: #b8a58a;
+            background: none;
+            margin-left: 2px;
+        }
+
+        /* Desktop nav links - hidden on mobile by default */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .nav-links a {
+            color: #d4c9b8;
+            transition: 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-links a:hover {
+            color: #f9e58b;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #c9a84c;
+            transition: 0.3s;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .nav-auth .btn-nav {
+            padding: 0.45rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-login-nav {
+            background: transparent;
+            border-color: rgba(201, 168, 76, 0.3) !important;
+            color: #d4c9b8;
+        }
+        .btn-login-nav:hover {
+            background: rgba(201, 168, 76, 0.08);
+            border-color: #c9a84c !important;
+        }
+        .btn-register-nav {
+            background: linear-gradient(135deg, #f9e58b, #c9a84c);
+            color: #0a0705;
+            box-shadow: 0 4px 15px rgba(201, 168, 76, 0.25);
+        }
+        .btn-register-nav:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+        }
+
+        /* ---------- HAMBURGER (Mobile Toggle) ---------- */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            gap: 5px;
+            padding: 6px;
+            border-radius: 8px;
+            transition: 0.3s;
+            background: transparent;
+            border: none;
+            margin-left: 0.5rem;
+        }
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: #f0e6d3;
+            border-radius: 4px;
+            transition: 0.3s ease;
+            transform-origin: center;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        /* ---------- MOBILE MENU DROPDOWN ---------- */
+        @media (max-width: 820px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 68px;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 7, 5, 0.98);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                flex-direction: column;
+                padding: 2rem 1.5rem;
+                gap: 1.8rem;
+                border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+                transform: translateY(-120%);
+                opacity: 0;
+                transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+                z-index: 999;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            }
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+            .nav-links a {
+                font-size: 1.1rem;
+                letter-spacing: 2px;
+                padding: 0.6rem 0;
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            }
+            .nav-links a::after {
+                display: none;
+            }
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+
+            /* Adjust auth buttons on smaller tablets */
+            .nav-auth .btn-nav {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.9rem;
+                min-height: 34px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.6rem 1rem;
+                min-height: 60px;
+            }
+            .nav-logo {
+                font-size: 1.2rem;
+            }
+            .nav-logo span {
+                font-size: 0.6rem;
+            }
+            .nav-auth .btn-nav {
+                font-size: 0.55rem;
+                padding: 0.3rem 0.7rem;
+                min-height: 30px;
+            }
+            .nav-links {
+                top: 60px;
+                padding: 1.5rem 1rem;
+                gap: 1.2rem;
+            }
+            .hamburger {
+                width: 36px;
+                height: 36px;
+            }
+            .hamburger span {
+                width: 22px;
+                height: 2px;
+            }
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(6px) rotate(45deg);
+            }
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-6px) rotate(-45deg);
+            }
+        }
+
+        /* ---------- HERO SECTION (Mobile-First) ---------- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1rem 3rem;
+            margin-top: 0;
+        }
+        .hero-content {
+            animation: fadeInUp 1s ease-out;
+            width: 100%;
+        }
+        .hero .crown {
+            font-size: clamp(3.2rem, 15vw, 5rem);
+            display: block;
+            margin-bottom: 0.1rem;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.25));
+            animation: float 3s ease-in-out infinite;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: clamp(2.8rem, 14vw, 6rem);
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #f9e58b 0%, #c9a84c 50%, #a67c2e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.05;
+        }
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 7vw, 3.2rem);
+            letter-spacing: 10px;
+            color: #f0e6d3;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
+            margin-top: -0.2rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            max-width: 580px;
+            margin: 0 auto 2rem;
+            font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+            color: #b8a58a;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            line-height: 1.7;
+            padding: 0 0.5rem;
+        }
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .btn-primary,
+        .btn-secondary {
+            flex: 1 1 auto;
+            min-width: 150px;
+            min-height: 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f9e58b, #c9a84c);
+            color: #0a0705;
+            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(201, 168, 76, 0.5);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #f0e6d3;
+            border: 2px solid rgba(201, 168, 76, 0.4);
+        }
+        .btn-secondary:hover {
+            background: rgba(201, 168, 76, 0.08);
+            border-color: #c9a84c;
+            transform: translateY(-3px);
+        }
+        .btn-secondary:active {
+            transform: scale(0.97);
+        }
+
+        @media (max-width: 420px) {
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.6rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                min-width: unset;
+                min-height: 48px;
+                font-size: 0.85rem;
+            }
+            .hero .crown {
+                font-size: 2.8rem;
+            }
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+            .hero h2 {
+                font-size: 1.4rem;
+                letter-spacing: 6px;
+            }
+        }
+
+        /* ---------- GAMES SECTION ---------- */
+        .section-games {
+            padding: 4rem 0;
+            background: rgba(0, 0, 0, 0.35);
+            border-top: 1px solid rgba(201, 168, 76, 0.08);
+            border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            color: #f0e6d3;
+            letter-spacing: 1px;
+        }
+        .section-header h2 span {
+            background: linear-gradient(135deg, #f9e58b, #c9a84c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-header p {
+            color: #b8a58a;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            letter-spacing: 1.5px;
+            margin-top: 0.3rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(201, 168, 76, 0.1);
+            border-radius: 20px;
+            padding: 2rem 1.2rem;
+            text-align: center;
+            transition: 0.35s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #c9a84c;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(201, 168, 76, 0.05);
+        }
+        .game-card:active {
+            transform: scale(0.98);
+        }
+        .game-card .icon {
+            font-size: 3rem;
+            color: #c9a84c;
+            margin-bottom: 0.8rem;
+        }
+        .game-card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 1.9rem);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+        .game-card p {
+            color: #b8a58a;
+            font-size: 0.9rem;
+            margin-bottom: 1.4rem;
+            line-height: 1.6;
+        }
+        .game-card .btn-play {
+            display: inline-block;
+            padding: 0.65rem 2.2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(201, 168, 76, 0.4);
+            color: #f0e6d3;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            min-height: 44px;
+            min-width: 120px;
+            background: transparent;
+            cursor: pointer;
+        }
+        .game-card .btn-play:hover {
+            background: #c9a84c;
+            color: #0a0705;
+            border-color: #c9a84c;
+            box-shadow: 0 0 25px rgba(201, 168, 76, 0.25);
+        }
+        .game-card .btn-play:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 600px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .game-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* ---------- FEATURES SECTION ---------- */
+        .section-features {
+            padding: 4rem 0;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.8rem;
+        }
+        .feature-item {
+            text-align: center;
+            padding: 1.2rem 0.8rem;
+        }
+        .feature-item i {
+            font-size: 2.5rem;
+            color: #c9a84c;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .feature-item h4 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+        .feature-item p {
+            color: #b8a58a;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+            .feature-item {
+                padding: 0.8rem 0.4rem;
+            }
+            .feature-item i {
+                font-size: 2rem;
+            }
+            .feature-item h4 {
+                font-size: 1rem;
+            }
+            .feature-item p {
+                font-size: 0.75rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ---------- FOOTER ---------- */
+        .footer {
+            padding: 2.5rem 0 1.2rem;
+            border-top: 1px solid rgba(201, 168, 76, 0.08);
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            margin-bottom: 1.8rem;
+            font-size: 0.85rem;
+            color: #b8a58a;
+        }
+        .footer-links a {
+            transition: 0.3s;
+            padding: 0.3rem 0;
+        }
+        .footer-links a:hover {
+            color: #f9e58b;
+        }
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin-bottom: 1.8rem;
+            font-size: 1.5rem;
+        }
+        .footer-socials a {
+            color: #b8a58a;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .footer-socials a:hover {
+            color: #c9a84c;
+            background: rgba(201, 168, 76, 0.08);
+            transform: translateY(-3px);
+        }
+        .footer-copy {
+            font-size: 0.75rem;
+            color: #6b5d4a;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+        }
+        .footer-copy span {
+            color: #c9a84c;
+        }
+        .footer-copy .responsible {
+            font-size: 0.65rem;
+            color: #4a4035;
+            display: block;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .footer-links {
+                gap: 0.8rem 1.2rem;
+                font-size: 0.75rem;
+            }
+            .footer-socials {
+                gap: 1rem;
+                font-size: 1.2rem;
+            }
+            .footer-socials a {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        /* ---------- ANIMATIONS ---------- */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Glow Orbs -->
+    <div class="glow-orb orb1"></div>
+    <div class="glow-orb orb2"></div>
+
+    <!-- ============ NAVIGATION ============ -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-logo">
+            ARVROYAL <span>CASINO</span>
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="close-menu">Home</a></li>
+            <li><a href="#games" class="close-menu">Games</a></li>
+            <li><a href="#features" class="close-menu">Why Us</a></li>
+        </ul>
+
+        <div class="nav-auth">
+            <a href="login.html" class="btn-nav btn-login-nav">Login</a>
+            <a href="register.html" class="btn-nav btn-register-nav">Register</a>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- ============ HERO SECTION ============ -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+            <span class="crown" aria-hidden="true">♛</span>
+            <h1>ARVROYAL</h1>
+            <h2>CASINO</h2>
+            <p>
+                Experience the pinnacle of online gaming. Premium slots, classic roulette,
+                and royal treatment — all in one regal destination.
+            </p>
+            <div class="hero-buttons">
+                <a href="register.html" class="btn-primary"><i class="fas fa-crown" aria-hidden="true"></i>Join Now</a>
+                <a href="#games" class="btn-secondary">Explore Games</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ GAMES SECTION ============ -->
+    <section class="section-games" id="games">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our <span>Royal Games</span></h2>
+                <p>Choose your throne and claim your fortune</p>
+            </div>
+
+            <div class="games-grid">
+
+                <!-- Game 1: Roulette -->
+                <div class="game-card">
+                    <div class="icon"><i class="fas fa-circle" aria-hidden="true"></i></div>
+                    <h3>Royal Roulette</h3>
+                    <p>Classic European roulette with a majestic twist. Place your bets and watch the wheel spin.</p>
+                    <a href="roulette.html" class="btn-play">Play Now</a>
+                </div>
+
+                <!-- Game 2: Slot Machine -->
+                <div class="game-card">
+                    <div class="icon"><i class="fas fa-sliders-h" aria-hidden="true"></i></div>
+                    <h3>Golden Slots</h3>
+                    <p>High-volatility slot action with jackpot sounds and massive win potential. Spin to win!</p>
+                    <a href="slotmachine.html" class="btn-play">Play Now</a>
+                </div>
+
+                <!-- Game 3: Wheel of Fortune -->
+                <div class="game-card">
+                    <div class="icon"><i class="fas fa-sync-alt" aria-hidden="true"></i></div>
+                    <h3>Wheel of Fortune</h3>
+                    <p>Spin the majestic wheel for instant rewards. Fortune favors the bold at ArvRoyal.</p>
+                    <a href="dashboard.html" class="btn-play">Spin Now</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FEATURES SECTION ============ -->
+    <section class="section-features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why <span>ArvRoyal</span></h2>
+                <p>Built for champions, trusted by royals</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                    <h4>Secure & Fair</h4>
+                    <p>State-of-the-art encryption &amp; provably fair RNG.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-coins" aria-hidden="true"></i>
+                    <h4>Instant Payouts</h4>
+                    <p>Withdraw your winnings fast, no delays.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-headset" aria-hidden="true"></i>
+                    <h4>24/7 Royal Support</h4>
+                    <p>Dedicated team ready to assist you.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                    <h4>Mobile Optimized</h4>
+                    <p>Seamless play on any device, anywhere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#games">Games</a>
+                <a href="#features">About</a>
+                <a href="login.html">Login</a>
+                <a href="register.html">Register</a>
+            </div>
+
+            <div class="footer-socials">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+
+            <div class="footer-copy">
+                &copy; 2026 <span>ARVROYAL CASINO</span>. All rights reserved.
+                <span class="responsible">18+ | Play responsibly.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ MOBILE MENU JAVASCRIPT ============ -->
+    <script>
+        (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const closeMenuBtns = document.querySelectorAll('.close-menu');
+
+            // Toggle menu on hamburger click
+            hamburger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isActive = navLinks.classList.toggle('active');
+                hamburger.classList.toggle('active');
+                hamburger.setAttribute('aria-expanded', isActive);
+            });
+
+            // Close menu when a nav link is clicked (smooth UX)
+            closeMenuBtns.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // Close menu if user clicks outside of it (on the background)
+            document.addEventListener('click', function(e) {
+                if (navLinks.classList.contains('active')) {
+                    const isClickInsideNav = navLinks.contains(e.target);
+                    const isClickOnHamburger = hamburger.contains(e.target);
+                    if (!isClickInsideNav && !isClickOnHamburger) {
+                        navLinks.classList.remove('active');
+                        hamburger.classList.remove('active');
+                        hamburger.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            // Handle window resize: if resized to desktop width, reset mobile menu state
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 820) {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                    hamburger.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

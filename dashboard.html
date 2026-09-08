@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎰 Casino.io – Lobby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ─── All styles remain exactly as in your original ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background: #0b0719;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            color: #fff;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(120, 40, 200, 0.25) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(200, 150, 30, 0.12) 0%, transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(80, 20, 140, 0.20) 0%, transparent 50%), #0b0719;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: radial-gradient(2px 2px at 10% 20%, rgba(255, 215, 0, 0.3), transparent), radial-gradient(2px 2px at 30% 70%, rgba(255, 215, 0, 0.2), transparent), radial-gradient(3px 3px at 50% 10%, rgba(255, 215, 0, 0.25), transparent), radial-gradient(2px 2px at 70% 80%, rgba(255, 215, 0, 0.15), transparent), radial-gradient(2px 2px at 90% 40%, rgba(255, 215, 0, 0.2), transparent), radial-gradient(4px 4px at 15% 90%, rgba(255, 215, 0, 0.10), transparent), radial-gradient(2px 2px at 60% 30%, rgba(255, 215, 0, 0.25), transparent), radial-gradient(3px 3px at 85% 15%, rgba(255, 215, 0, 0.15), transparent), radial-gradient(2px 2px at 45% 55%, rgba(255, 215, 0, 0.20), transparent);
+            background-size: 200px 200px;
+            animation: sparkleFloat 40s linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, -20px) scale(1.1);
+            }
+            100% {
+                transform: translate(-10px, 10px) scale(0.95);
+            }
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            animation: orbFloat 12s ease-in-out infinite alternate;
+        }
+        .orb--1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #b8860b, transparent 70%);
+            top: -100px;
+            right: -100px;
+        }
+        .orb--2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #7c3aed, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            animation-delay: 4s;
+            opacity: 0.2;
+        }
+        .orb--3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #f59e0b, transparent 70%);
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 8s;
+            opacity: 0.15;
+        }
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.2);
+            }
+        }
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px 30px 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(15, 12, 35, 0.70);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.04);
+            border-left: 1px solid rgba(255, 215, 0, 0.06);
+            border-right: 1px solid rgba(255, 215, 0, 0.06);
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0 18px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.06);
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+        .brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brand i {
+            -webkit-text-fill-color: initial;
+            color: #fbbf24;
+        }
+        .brand .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34d399;
+            margin-left: 6px;
+            animation: live-pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes live-pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.8);
+                box-shadow: 0 0 0 6px rgba(52, 211, 153, 0);
+            }
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+        }
+        .nav-links a:hover {
+            color: #fbbf24;
+        }
+        .nav-links a.active {
+            color: #fbbf24;
+        }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #fbbf24;
+            border-radius: 2px;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+            border: 2px solid rgba(255, 215, 0, 0.15);
+            flex-shrink: 0;
+        }
+        .user-details h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .user-details span {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .user-details span i {
+            color: #fbbf24;
+            margin-right: 4px;
+        }
+        .balance-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 16px 4px 12px;
+            border-radius: 100px;
+            background: rgba(251, 191, 36, 0.06);
+            border: 1px solid rgba(251, 191, 36, 0.08);
+            color: #fbbf24;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: default;
+        }
+        .balance-display i {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        .balance-display .balance-amount {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        .balance-display .currency {
+            font-size: 0.65rem;
+            opacity: 0.5;
+        }
+        /* ─── TOP-UP BUTTON – hidden by default, shown only for admin ─── */
+        .btn-topup {
+            display: none;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #34d399, #059669);
+            border: none;
+            color: #0b0719;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-topup.show {
+            display: inline-flex;
+        }
+        .btn-topup:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(52, 211, 153, 0.2);
+        }
+        .btn-topup i {
+            font-size: 0.65rem;
+        }
+
+        .btn-logout {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+        }
+        .btn-logout i {
+            font-size: 0.85rem;
+        }
+        .hero {
+            margin: 24px 0 28px;
+            padding: 28px 32px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.06), rgba(184, 134, 11, 0.02));
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .hero h2 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #fff 50%, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+        .hero .stats-mini {
+            display: flex;
+            gap: 24px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+        }
+        .hero .stats-mini i {
+            color: #fbbf24;
+            margin-right: 4px;
+        }
+        .hero .stats-mini .hero-balance {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .hero .stats-mini .hero-balance i {
+            color: #34d399;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 28px;
+            padding: 28px 20px 24px;
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            backdrop-filter: blur(4px);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .game-card .game-icon {
+            font-size: 3.2rem;
+            color: #fbbf24;
+            opacity: 0.7;
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+        .game-card:hover .game-icon {
+            opacity: 1;
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+        }
+        .game-card .game-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .game-card .game-desc {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        .game-card .game-badge {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 5px 18px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: rgba(52, 211, 153, 0.08);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.05);
+            font-family: 'Inter', sans-serif;
+        }
+        .game-card .game-badge.hot {
+            background: rgba(251, 191, 36, 0.08);
+            color: #fbbf24;
+            border-color: rgba(251, 191, 36, 0.05);
+        }
+        .game-card .game-badge.coming {
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* ─── CARD BATTLER – FEATURED STYLING ─── */
+        .game-card.featured {
+            background: rgba(120, 40, 200, 0.08);
+            border-color: rgba(167, 139, 250, 0.25);
+            box-shadow: 0 0 40px rgba(120, 40, 200, 0.08), inset 0 0 60px rgba(120, 40, 200, 0.04);
+        }
+        .game-card.featured::before {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(120, 40, 200, 0.05) 60%);
+        }
+        .game-card.featured:hover {
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 20px 60px rgba(120, 40, 200, 0.25), 0 0 80px rgba(120, 40, 200, 0.08);
+            transform: translateY(-8px) scale(1.03);
+        }
+        .game-card.featured .game-icon {
+            color: #a78bfa;
+            opacity: 0.9;
+        }
+        .game-card.featured:hover .game-icon {
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.4);
+        }
+        .game-card.featured .game-name {
+            color: #c4b5fd;
+        }
+        .game-card .game-badge.new {
+            background: rgba(167, 139, 250, 0.15);
+            color: #a78bfa;
+            border-color: rgba(167, 139, 250, 0.15);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px 4px rgba(167, 139, 250, 0.08);
+            }
+        }
+        .game-card.featured .featured-ribbon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 3px 12px;
+            border-radius: 100px;
+            box-shadow: 0 4px 20px rgba(120, 40, 200, 0.3);
+            font-family: 'Inter', sans-serif;
+        }
+
+        #statusCard {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            margin: 20px 0 28px;
+            transition: 0.3s;
+            min-height: 260px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #statusCard .status-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 14px;
+        }
+        #statusCard .status-icon.spinning {
+            animation: spin 1.2s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        #statusCard .status-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+        }
+        #statusCard .status-desc {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        #statusCard .status-detail {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            margin-top: 10px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        #statusCard .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        #statusCard .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        #statusCard .retry-area {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #statusCard .retry-area .btn-sm {
+            padding: 10px 28px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        #statusCard .retry-area .btn-sm-primary {
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+        }
+        #statusCard .retry-area .btn-sm-primary:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+        }
+        #statusCard .retry-area .btn-sm-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        #statusCard .retry-area .btn-sm-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(167, 139, 250, 0.4);
+            color: #fff;
+        }
+        #dashboardContent {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(11, 7, 25, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 24px;
+        }
+        .auth-overlay.show {
+            display: flex;
+        }
+        .auth-overlay .lock-icon {
+            font-size: 4rem;
+            color: rgba(251, 191, 36, 0.2);
+            margin-bottom: 20px;
+        }
+        .auth-overlay h2 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .auth-overlay p {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.95rem;
+            max-width: 420px;
+            margin-bottom: 28px;
+        }
+        .auth-overlay .btn-login-now {
+            padding: 12px 40px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            border: none;
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .auth-overlay .btn-login-now:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.2);
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: rgba(20, 16, 45, 0.95);
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            border-radius: 28px;
+            padding: 32px 36px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        }
+        .modal h2 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal h2 i {
+            color: #fbbf24;
+        }
+        .modal .form-group {
+            margin-bottom: 16px;
+        }
+        .modal .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 4px;
+        }
+        .modal .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal .form-group input:focus {
+            border-color: rgba(251, 191, 36, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .modal .form-group .input-hint {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.1);
+            margin-top: 4px;
+        }
+        .modal .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+        .modal .form-actions button {
+            padding: 10px 24px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal .form-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .modal .form-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .modal .form-actions .btn-save {
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: #0b0719;
+        }
+        .modal .form-actions .btn-save:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(52, 211, 153, 0.2);
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 14px 24px;
+            border-radius: 16px;
+            background: rgba(15, 12, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #fff;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            max-width: 420px;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .toast i {
+            font-size: 1.2rem;
+        }
+        .toast.success i {
+            color: #34d399;
+        }
+        .toast.error i {
+            color: #f87171;
+        }
+        .toast.info i {
+            color: #60a5fa;
+        }
+        .toast.warning i {
+            color: #fbbf24;
+        }
+        .db-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .db-status i {
+            font-size: 0.6rem;
+        }
+        .db-status.online i {
+            color: #34d399;
+        }
+        .db-status.offline i {
+            color: #f87171;
+        }
+        .db-status .status-label {
+            color: rgba(255, 255, 255, 0.15);
+        }
+        .db-status .status-value {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .hidden-input {
+            display: none;
+        }
+        @media (max-width: 1024px) {
+            .game-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 820px) {
+            .wrapper {
+                padding: 16px 18px 20px;
+            }
+            .game-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+            }
+            .hero {
+                padding: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hero .stats-mini {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .nav-links {
+                gap: 16px;
+                font-size: 0.75rem;
+            }
+            .nav-left {
+                gap: 16px;
+            }
+            .nav-right {
+                flex-wrap: wrap;
+            }
+            #statusCard {
+                min-height: 200px;
+                padding: 30px 16px;
+            }
+            #statusCard .status-icon {
+                font-size: 2.4rem;
+            }
+            #statusCard .status-title {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .nav-left {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav-links {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            .nav-right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .user-info {
+                gap: 8px;
+            }
+            .btn-logout {
+                padding: 6px 14px;
+                font-size: 0.7rem;
+            }
+            .balance-display {
+                font-size: 0.75rem;
+                padding: 2px 12px 2px 8px;
+            }
+            .btn-topup {
+                padding: 4px 10px;
+                font-size: 0.6rem;
+            }
+            .game-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .game-card {
+                padding: 18px 12px 16px;
+            }
+            .game-card .game-icon {
+                font-size: 2.2rem;
+            }
+            .game-card .game-name {
+                font-size: 0.9rem;
+            }
+            .game-card .game-desc {
+                font-size: 0.7rem;
+            }
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+            .toast {
+                bottom: 16px;
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                padding: 12px 18px;
+                font-size: 0.8rem;
+            }
+            .modal {
+                padding: 24px 20px;
+            }
+            #statusCard {
+                min-height: 180px;
+                padding: 24px 14px;
+            }
+            #statusCard .status-icon {
+                font-size: 2rem;
+            }
+            #statusCard .status-title {
+                font-size: 0.95rem;
+            }
+            #statusCard .status-desc {
+                font-size: 0.8rem;
+            }
+            #statusCard .retry-area .btn-sm {
+                padding: 8px 18px;
+                font-size: 0.75rem;
+            }
+            .game-card .featured-ribbon {
+                font-size: 0.45rem;
+                padding: 2px 10px;
+                top: 8px;
+                right: 8px;
+            }
+        }
+        @media (max-width: 400px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+            #statusCard {
+                min-height: 160px;
+                padding: 20px 12px;
+            }
+            #statusCard .status-icon {
+                font-size: 1.8rem;
+            }
+            #statusCard .status-title {
+                font-size: 0.85rem;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 168, 71, 0.15);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 168, 71, 0.25);
+        }
+        ::selection {
+            background: rgba(212, 168, 71, 0.2);
+            color: var(--gold-light);
+        }
+        button:focus-visible {
+            outline: 2px solid #fbbf24;
+            outline-offset: 2px;
+        }
+        button {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .value.balance.flash {
+            animation: balanceFlash 0.4s ease;
+        }
+        @keyframes balanceFlash {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+                color: #b3ffd9;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+
+    <!-- ─── AUTH OVERLAY ─── -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="lock-icon"><i class="fas fa-lock"></i></div>
+        <h2>🔐 Session Required</h2>
+        <p>You need to be logged in to access the dashboard.<br />Please sign in to continue.</p>
+        <button class="btn-login-now" id="goToLoginBtn">
+            <i class="fas fa-sign-in-alt"></i> Go to Login
+        </button>
+    </div>
+
+    <!-- ─── MAIN WRAPPER ─── -->
+    <div class="wrapper" id="mainWrapper">
+
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <div class="brand">
+                    <i class="fas fa-crown"></i> Arvroyal Casino<span style="color:rgba(255,255,255,0.1);">.io</span>
+                    <span class="live-dot"></span>
+                </div>
+                <div class="nav-links">
+                    <a href="dashboard.html" class="active">Lobby</a>
+                    <a href="account_management.html" id="usersMgmtLink" style="display:none;">Users Management</a>
+                    <a href="transfer_balance.html">Transfer</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="user-info">
+                    <div class="user-avatar" id="dashAvatar">JD</div>
+                    <div class="user-details">
+                        <h4 id="dashName">John Doe</h4>
+                        <span><i class="fas fa-id-badge"></i> <span id="dashEmail">admin@casino.io</span></span>
+                    </div>
+                </div>
+                <div class="balance-display" id="balanceDisplay">
+                    <i class="fas fa-coins"></i>
+                    <span class="balance-amount" id="navBalance">0.00</span>
+                    <span class="currency">PHP</span>
+                </div>
+                <!-- ─── TOP-UP BUTTON ─── hidden by default; shown only for admin via JS ─── -->
+                <button class="btn-topup" id="topupNavBtn">
+                    <i class="fas fa-plus"></i> Top Up
+                </button>
+                <div class="db-status online" id="dbStatus">
+                    <i class="fas fa-circle"></i>
+                    <span class="status-label">DB</span>
+                    <span class="status-value" id="dbStatusLabel">github</span>
+                </div>
+                <div class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Exit
+                </div>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <div class="hero">
+            <div>
+                <h2>Welcome back, <span id="heroName">John</span> 🎰</h2>
+                <p>Your favourite games are waiting</p>
+            </div>
+            <div class="stats-mini">
+                <span class="hero-balance"><i class="fas fa-coins"></i> Balance: <strong id="heroBalance">$0.00</strong></span>
+            </div>
+        </div>
+
+        <!-- ─── STATUS CARD ─── -->
+        <div id="statusCard">
+            <span class="status-icon" id="statusIcon"><i class="fas fa-database"></i></span>
+            <div class="status-title" id="statusTitle">Connecting…</div>
+            <div class="status-desc" id="statusDesc">Please wait while we connect to GitHub.</div>
+            <div class="status-detail" id="statusDetail"></div>
+            <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+            <div class="retry-area" id="retryArea" style="display:none;">
+                <button class="btn-sm btn-sm-primary" id="retryBtn"><i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry</button>
+            </div>
+        </div>
+
+        <!-- ─── DASHBOARD CONTENT ─── -->
+        <div id="dashboardContent">
+
+            <!-- GAME GRID -->
+            <div class="game-grid">
+
+                <!-- Roulette -->
+                <a href="roulette.html" class="game-card featured">
+                    <span class="featured-ribbon"><i class="fas fa-star" style="margin-right:4px;"></i>NEW</span>
+                    <div class="game-icon"><i class="fas fa-circle"></i></div>
+                    <div class="game-name">Roulette</div>
+                    <div class="game-desc">Spin the wheel &amp; win big</div>
+                       <span class="game-badge new"><i class="fas fa-bolt" style="margin-right:4px;"></i>FEATURED</span>
+                </a>
+
+                <!-- Slots -->
+                <a href="slotmachine.html" class="game-card featured">
+                    <span class="featured-ribbon"><i class="fas fa-star" style="margin-right:4px;"></i>NEW</span>
+                    <div class="game-icon"><i class="fas fa-sliders-h"></i></div>
+                    <div class="game-name">Slot Machine</div>
+                    <div class="game-desc">Jackpots &amp; spin the machine</div>
+                        <span class="game-badge new"><i class="fas fa-bolt" style="margin-right:4px;"></i>FEATURED</span>
+                </a>
+          
+                <!-- ═══ CARD BATTLER – FEATURED ═══ -->
+                <a href="card_battler.html" class="game-card featured">
+                    <span class="featured-ribbon"><i class="fas fa-star" style="margin-right:4px;"></i>NEW</span>
+                    <div class="game-icon"><i class="fas fa-id-card"></i></div>
+                    <div class="game-name">Card Battler</div>
+                    <div class="game-desc">Battle &amp; collect powerful cards</div>
+                    <span class="game-badge new"><i class="fas fa-bolt" style="margin-right:4px;"></i>FEATURED</span>
+                </a> 
+                     <a href="Crypto_sim.html" class="game-card featured">
+    <span class="featured-ribbon"><i class="fas fa-star" style="margin-right:4px;"></i>NEW</span>
+    <div class="game-icon"><i class="fas fa-chart-line"></i></div>
+    <div class="game-name">Crypto Market Sim</div>
+    <div class="game-desc">Play the stock market &amp; make profits</div>
+    <span class="game-badge new"><i class="fas fa-bolt" style="margin-right:4px;"></i>FEATURED</span>
+</a>
+ <!-- ═══ CARD BATTLER – FEATURED ═══ -->
+<a href="cookie_empire.html" class="game-card featured">
+    <span class="featured-ribbon"><i class="fas fa-star" style="margin-right:4px;"></i>NEW</span>
+    <div class="game-icon"><i class="fas fa-crown"></i></div>
+    <div class="game-name">Empire of cookies</div>
+    <div class="game-desc">Build &amp; collect powerful cookies</div>
+    <span class="game-badge new"><i class="fas fa-bolt" style="margin-right:4px;"></i>FEATURED</span>
+</a>
+                <!-- Other Games -->
+                <a href="#" class="game-card">
+                    <div class="game-icon"><i class="fas fa-hashtag"></i></div>
+                    <div class="game-name">Other Games</div>
+                    <div class="game-desc">Coming soon!</div>
+                    <span class="game-badge coming">Stay tune</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ─── TOP-UP MODAL ─── -->
+    <div class="modal-overlay" id="topupModal">
+        <div class="modal">
+            <h2><i class="fas fa-coins"></i> Top Up Balance</h2>
+            <form id="topupForm">
+                <div class="form-group">
+                    <label>Amount (PHP)</label>
+                    <input type="number" id="topupAmount" placeholder="Enter amount..." min="0.01" step="0.01" required />
+                    <div class="input-hint">Minimum: $0.01</div>
+                </div>
+                <input type="hidden" id="topupUserId" value="" />
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="topupCancel">Cancel</button>
+                    <button type="submit" class="btn-save" id="topupSave"><i class="fas fa-plus"></i> Add Funds</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Ready</span>
+    </div>
+
+    <!-- ─── JAVASCRIPT – GITHUB DATABASE (same as login/register) ─── -->
+    <script>
+        // ============================================================
+        //  SECURITY
+        // ============================================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+        });
+
+        // ============================================================
+        //  CONSTANTS – GitHub (same as login/register)
+        // ============================================================
+        const ENCRYPTION_KEY_HASH = '$2a$12$tLvlRpTmRlBdGSUBZ8.phe4dOfl09CcFEp2cjG.U8lpPKvtwku5N6';
+        const GITHUB_OWNER = 'tcute6851';
+        const GITHUB_REPO = 'Arvroyal-Casino-Games';
+        const GITHUB_PATH = 'CasinoDB.json';
+        const GITHUB_TOKEN_KEY = 'github_pat';
+
+        let dbData = { users: [] };
+        let currentUser = null;
+        let _githubSha = null;
+        let _defaultBranch = 'main';
+        let isRetrying = false;
+
+        // ─── DOM REFS ──────────────────────────────────────────
+        const statusCard = document.getElementById('statusCard');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDesc = document.getElementById('statusDesc');
+        const statusDetail = document.getElementById('statusDetail');
+        const progressFill = document.getElementById('progressFill');
+        const retryArea = document.getElementById('retryArea');
+        const retryBtn = document.getElementById('retryBtn');
+        const dashboardContent = document.getElementById('dashboardContent');
+        const authOverlay = document.getElementById('authOverlay');
+
+        // ============================================================
+        //  CRYPTO HELPERS (identical)
+        // ============================================================
+        async function deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+            );
+            return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        async function encryptData(plaintext) {
+            const enc = new TextEncoder();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv },
+                key,
+                enc.encode(plaintext)
+            );
+            const parts = [
+                btoa(String.fromCharCode(...salt)),
+                btoa(String.fromCharCode(...iv)),
+                btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+            ];
+            return parts.join(':');
+        }
+
+        async function decryptData(encryptedString) {
+            const parts = encryptedString.split(':');
+            if (parts.length !== 3) throw new Error('Invalid encrypted format');
+            const salt = Uint8Array.from(atob(parts[0]), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(parts[1]), c => c.charCodeAt(0));
+            const ciphertext = Uint8Array.from(atob(parts[2]), c => c.charCodeAt(0));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv },
+                key,
+                ciphertext
+            );
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ============================================================
+        //  GITHUB HELPERS (same as login/register)
+        // ============================================================
+        function getGitHubToken() {
+            let token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                token = prompt('🔑 Enter your GitHub Personal Access Token (with repo scope):');
+                if (token) {
+                    localStorage.setItem(GITHUB_TOKEN_KEY, token);
+                }
+            }
+            return token;
+        }
+
+        function clearToken() {
+            localStorage.removeItem(GITHUB_TOKEN_KEY);
+        }
+
+        async function detectDefaultBranch(token) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+                const resp = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    return data.default_branch || 'main';
+                }
+            } catch {}
+            return 'main';
+        }
+
+        async function createEmptyDatabase(token, branch) {
+            const emptyData = { users: [] };
+            const json = JSON.stringify(emptyData, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+            const url =
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Initialize CasinoDB.json',
+                    content: content,
+                    branch: branch
+                })
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`GitHub API error (${response.status}): ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+        }
+
+        async function loadDatabase(showToastMsg = true) {
+            let token = getGitHubToken();
+            if (!token) {
+                updateStatus('❌', '❌', 'Token Required', 'Please enter your GitHub token to continue.',
+                    'Click "Retry" to try again.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('GitHub token required.', 'error');
+                showDashboardUI(false);
+                setDbStatus('offline', 'no token');
+                return false;
+            }
+
+            try {
+                updateStatus('spinning', '📡', 'Connecting to GitHub…', 'Fetching database from repository…');
+                setProgress(20);
+
+                const branch = await detectDefaultBranch(token);
+                _defaultBranch = branch;
+
+                setProgress(40);
+
+                const url =
+                    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.status === 404) {
+                    updateStatus('spinning', '📝', 'Creating database…', 'No database found. Creating new one…');
+                    setProgress(60);
+                    await createEmptyDatabase(token, branch);
+                    dbData = { users: [] };
+                    setProgress(100);
+                    if (showToastMsg) showToast('✅ New database created on GitHub!', 'success');
+                    showDashboardUI(true);
+                    await checkSession();
+                    setDbStatus('online', 'github');
+                    return true;
+                }
+
+                if (response.status === 401) {
+                    clearToken();
+                    updateStatus('❌', '❌', 'Invalid Token', 'Your GitHub token is invalid or expired.',
+                        'Click "Retry" to enter a new token.');
+                    showRetryButtons(true);
+                    if (showToastMsg) showToast('Invalid GitHub token. Please try again.', 'error');
+                    showDashboardUI(false);
+                    setDbStatus('offline', 'invalid token');
+                    return false;
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const msg = errorData.message || response.statusText;
+                    throw new Error(`GitHub API error (${response.status}): ${msg}`);
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                _githubSha = data.sha;
+
+                let json;
+                try {
+                    const decrypted = await decryptData(content);
+                    json = JSON.parse(decrypted);
+                } catch {
+                    json = JSON.parse(content);
+                }
+                dbData = json;
+                setProgress(100);
+                if (showToastMsg) showToast('✅Your access granted is successful!', 'success');
+                showDashboardUI(true);
+                await checkSession();
+                setDbStatus('online', 'github');
+                return true;
+            } catch (error) {
+                console.error('loadDatabase error:', error);
+                const errorMsg = error.message || 'Could not connect to GitHub.';
+                updateStatus('❌', '❌', 'Loading Failed', errorMsg, 'Check your internet connection and token.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('Failed to load database: ' + errorMsg, 'error');
+                showDashboardUI(false);
+                setDbStatus('offline', 'error');
+                return false;
+            }
+        }
+
+        async function saveDatabase(data) {
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                showToast('No GitHub token found.', 'error');
+                return;
+            }
+
+            const json = JSON.stringify(data, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+
+            const url =
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Update CasinoDB.json',
+                    content: content,
+                    sha: _githubSha,
+                    branch: _defaultBranch
+                })
+            });
+
+            if (response.status === 401) {
+                clearToken();
+                showToast('GitHub token expired. Please refresh and enter a new token.', 'error');
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`Failed to save: ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+            console.log('✅ Database saved to GitHub');
+        }
+
+        // ============================================================
+        //  STATUS UI HELPERS
+        // ============================================================
+        function updateStatus(iconType, iconHtml, title, desc, detail = '') {
+            if (iconType === 'spinning') {
+                statusIcon.className = 'status-icon spinning';
+                statusIcon.innerHTML = iconHtml;
+            } else {
+                statusIcon.className = 'status-icon';
+                statusIcon.innerHTML = iconHtml;
+            }
+            statusTitle.textContent = title;
+            statusDesc.textContent = desc;
+            statusDetail.textContent = detail;
+        }
+
+        function setProgress(pct) {
+            progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+        }
+
+        function showRetryButtons(show = true) {
+            retryArea.style.display = show ? 'flex' : 'none';
+        }
+
+        function showDashboardUI(show) {
+            if (show) {
+                statusCard.style.display = 'none';
+                dashboardContent.style.display = 'flex';
+            } else {
+                statusCard.style.display = 'flex';
+                dashboardContent.style.display = 'none';
+            }
+        }
+
+        function setDbStatus(state, source) {
+            const el = document.getElementById('dbStatus');
+            const label = document.getElementById('dbStatusLabel');
+            el.className = 'db-status ' + state;
+            if (state === 'online') {
+                label.textContent = source || 'github';
+                el.querySelector('i').className = 'fas fa-circle';
+            } else {
+                label.textContent = 'offline';
+                el.querySelector('i').className = 'fas fa-circle';
+            }
+        }
+
+        // ─── Retry logic ──────────────────────────────────────
+        retryBtn.addEventListener('click', async function() {
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying…';
+            clearToken();
+            const success = await loadDatabase(true);
+            if (!success) {
+                showRetryButtons(true);
+            }
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry';
+        });
+
+        // ============================================================
+        //  AUTH OVERLAY
+        // ============================================================
+        function showAuthOverlay(show) {
+            if (show) {
+                authOverlay.classList.add('show');
+                document.getElementById('mainWrapper').style.opacity = '0.3';
+                document.getElementById('mainWrapper').style.pointerEvents = 'none';
+            } else {
+                authOverlay.classList.remove('show');
+                document.getElementById('mainWrapper').style.opacity = '1';
+                document.getElementById('mainWrapper').style.pointerEvents = 'auto';
+            }
+        }
+
+        document.getElementById('goToLoginBtn').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        //  DASHBOARD RENDER
+        // ============================================================
+        function getInitials(name) {
+            if (!name) return 'U';
+            return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function formatBalance(amount) {
+            return (amount || 0).toFixed(2);
+        }
+
+        function updateBalanceDisplay(user) {
+            const bal = user?.balance || 0;
+            document.getElementById('navBalance').textContent = formatBalance(bal);
+            document.getElementById('heroBalance').textContent = '$' + formatBalance(bal);
+        }
+
+        /**
+         * Check if the given user is the admin.
+         * Admin = email === 'itarvincyberdevstack@gmail.com' AND name === 'arvin' (case-insensitive)
+         */
+        function isAdminUser(user) {
+            if (!user) return false;
+            const email = (user.email || '').toLowerCase();
+            const name = (user.name || '').toLowerCase();
+            return email === 'itarvincyberdevstack@gmail.com' && name === 'arvin';
+        }
+
+        function renderDashboard(user) {
+            currentUser = user;
+
+            document.getElementById('dashAvatar').textContent = getInitials(user.name);
+            document.getElementById('dashName').textContent = user.name || 'User';
+            document.getElementById('dashEmail').textContent = user.email || 'user@casino.io';
+            document.getElementById('heroName').textContent = user.name ? user.name.split(' ')[0] : 'Player';
+            updateBalanceDisplay(user);
+
+            // ─── Admin-only: Users Management link ──────────────────
+            const mgmtLink = document.getElementById('usersMgmtLink');
+            const admin = isAdminUser(user);
+            mgmtLink.style.display = admin ? '' : 'none';
+
+            // ─── Admin-only: Top-Up button ──────────────────────────
+            const topupBtn = document.getElementById('topupNavBtn');
+            if (admin) {
+                topupBtn.classList.add('show');
+            } else {
+                topupBtn.classList.remove('show');
+            }
+        }
+
+        // ============================================================
+        //  SESSION CHECK
+        // ============================================================
+        async function checkSession() {
+            const saved = sessionStorage.getItem('auth_user');
+            if (!saved) {
+                showAuthOverlay(true);
+                showDashboardUI(false);
+                document.getElementById('usersMgmtLink').style.display = 'none';
+                document.getElementById('topupNavBtn').classList.remove('show');
+                return false;
+            }
+            try {
+                const user = JSON.parse(saved);
+                const exists = dbData.users.find(u => u.id === user.id);
+                if (exists) {
+                    if (exists.balance === undefined) exists.balance = 0;
+                    showAuthOverlay(false);
+                    showDashboardUI(true);
+                    renderDashboard(exists);
+                    return true;
+                } else {
+                    sessionStorage.removeItem('auth_user');
+                    showAuthOverlay(true);
+                    showDashboardUI(false);
+                    document.getElementById('usersMgmtLink').style.display = 'none';
+                    document.getElementById('topupNavBtn').classList.remove('show');
+                    showToast('Your session is no longer valid. Please log in again.', 'error');
+                    return false;
+                }
+            } catch {
+                sessionStorage.removeItem('auth_user');
+                showAuthOverlay(true);
+                showDashboardUI(false);
+                document.getElementById('usersMgmtLink').style.display = 'none';
+                document.getElementById('topupNavBtn').classList.remove('show');
+                return false;
+            }
+        }
+
+        // ============================================================
+        //  TOP-UP FUNCTIONALITY – guarded for admin only
+        // ============================================================
+        const topupModal = document.getElementById('topupModal');
+        const topupForm = document.getElementById('topupForm');
+        const topupAmount = document.getElementById('topupAmount');
+        const topupUserId = document.getElementById('topupUserId');
+
+        function openTopupModal(userId, userName) {
+            // Extra guard: only admin can open the modal
+            if (!currentUser || !isAdminUser(currentUser)) {
+                showToast('⛔ Only the admin can perform top-ups.', 'error');
+                return;
+            }
+            topupUserId.value = userId;
+            topupAmount.value = '';
+            topupAmount.focus();
+            document.querySelector('#topupModal .modal h2').innerHTML =
+                `<i class="fas fa-coins"></i> Top Up – ${userName || 'User'}`;
+            topupModal.classList.add('active');
+        }
+
+        document.getElementById('topupCancel').addEventListener('click', () => {
+            topupModal.classList.remove('active');
+        });
+        topupModal.addEventListener('click', (e) => {
+            if (e.target === topupModal) topupModal.classList.remove('active');
+        });
+
+        document.getElementById('topupNavBtn').addEventListener('click', function() {
+            if (!currentUser) {
+                showToast('Please log in first.', 'error');
+                return;
+            }
+            // Extra guard: only admin can trigger the top-up
+            if (!isAdminUser(currentUser)) {
+                showToast('⛔ Only the admin can perform top-ups.', 'error');
+                return;
+            }
+            openTopupModal(currentUser.id, currentUser.name);
+        });
+
+        topupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Extra guard: only admin can submit a top-up
+            if (!currentUser || !isAdminUser(currentUser)) {
+                showToast('⛔ Only the admin can perform top-ups.', 'error');
+                topupModal.classList.remove('active');
+                return;
+            }
+
+            const amount = parseFloat(topupAmount.value);
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid amount.', 'error');
+                return;
+            }
+
+            const userId = topupUserId.value;
+            if (!userId) {
+                showToast('User ID missing.', 'error');
+                return;
+            }
+
+            const user = dbData.users.find(u => u.id === userId);
+            if (!user) {
+                showToast('User not found.', 'error');
+                return;
+            }
+
+            user.balance = (user.balance || 0) + amount;
+
+            try {
+                await saveDatabase(dbData);
+                topupModal.classList.remove('active');
+                showToast(`$${amount.toFixed(2)} added to ${user.name}'s balance and saved to GitHub!`, 'success');
+                if (currentUser) {
+                    const updated = dbData.users.find(u => u.id === currentUser.id);
+                    if (updated) {
+                        renderDashboard(updated);
+                    } else {
+                        await checkSession();
+                    }
+                }
+            } catch (err) {
+                showToast('Top-up failed: ' + err.message, 'error');
+            }
+        });
+
+        // ============================================================
+        //  LOGOUT
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem('auth_user');
+            showToast('Logged out successfully', 'info');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 350);
+        });
+
+        // ============================================================
+        //  TOAST
+        // ============================================================
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            const m = document.getElementById('toastMessage');
+            const icon = t.querySelector('i');
+            t.className = 'toast ' + type;
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            icon.className = icons[type] || icons.info;
+            m.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        (async function init() {
+            showDashboardUI(false);
+            updateStatus('spinning', '📡', 'Connecting to GitHub…', 'Loading database from repository…');
+            setProgress(10);
+
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                updateStatus('🔑', '🔑', 'GitHub Token Required', 'Please enter your GitHub Personal Access Token.',
+                    'Click "Retry" to enter your token.');
+                showRetryButtons(true);
+                showToast('GitHub token required to access database.', 'info');
+                setDbStatus('offline', 'no token');
+            } else {
+                const success = await loadDatabase(true);
+                if (!success) {
+                    showRetryButtons(true);
+                }
+            }
+        })();
+
+        console.log('🎰 Dashboard initialized (GitHub database). Top-up is admin-only.');
+        console.log('✨ Card Battler is now featured with "NEW" badge!');
+    </script>
+
+</body>
+</html>

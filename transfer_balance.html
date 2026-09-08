@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>💸 Transfer Balance</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ─── GLOBAL THEME ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 30%, #1a0f0a 0%, #07070d 70%, #030205 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 16px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 168, 71, 0.03) 0%, transparent 60%),
+                radial-gradient(circle at 80% 50%, rgba(212, 168, 71, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .transfer-card {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(170deg, #1a1410 0%, #0d0a08 40%, #080507 100%);
+            border-radius: 48px;
+            padding: 32px 28px 36px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(212, 168, 71, 0.12);
+            backdrop-filter: blur(2px);
+        }
+
+        .transfer-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4a847, #ffd700, #d4a847, transparent);
+            border-radius: 0 0 50% 50%;
+            opacity: 0.6;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 900;
+            font-style: italic;
+            background: linear-gradient(135deg, #f0d080, #d4a847, #b8923a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .title i {
+            -webkit-text-fill-color: initial;
+            color: #f0d080;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .back-btn:hover {
+            background: rgba(212, 168, 71, 0.08);
+            border-color: #d4a847;
+            color: #f0d080;
+            transform: scale(1.03);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 16px 6px 12px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 20px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0719;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Orbitron', monospace;
+            flex-shrink: 0;
+        }
+        .user-details {
+            flex: 1;
+        }
+        .user-details .name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .user-details .email {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.75rem;
+        }
+        .balance-box {
+            text-align: right;
+            color: #7dffb3;
+            font-weight: 700;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', monospace;
+        }
+        .balance-box .label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.3s;
+        }
+        .input-wrapper:focus-within {
+            border-color: rgba(212, 168, 71, 0.4);
+            box-shadow: 0 0 0 4px rgba(212, 168, 71, 0.06);
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .input-wrapper i {
+            color: rgba(255, 255, 255, 0.2);
+            padding: 0 14px;
+            font-size: 0.95rem;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 6px;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.6);
+            width: 100%;
+            padding: 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .message-box {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        .message-box.show {
+            display: flex;
+        }
+        .message-box.success {
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            color: #7dffb3;
+        }
+        .message-box.error {
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+        .message-box.info {
+            background: rgba(96, 165, 250, 0.08);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        /* ─── STATUS CARD ─── */
+        .loader-card {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 16px;
+            transition: 0.3s;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader-card .status-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 14px;
+        }
+        .loader-card .status-icon.spinning {
+            animation: spin 1.2s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .loader-card .status-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Orbitron', monospace;
+        }
+        .loader-card .status-desc {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        .loader-card .status-detail {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            margin-top: 10px;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .loader-card .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .loader-card .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .loader-card .retry-area {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .loader-card .retry-area .btn-sm {
+            padding: 10px 28px;
+            border-radius: 100px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        .loader-card .retry-area .btn-sm-primary {
+            background: linear-gradient(135deg, #fbbf24, #b8860b);
+            color: #0b0719;
+        }
+        .loader-card .retry-area .btn-sm-primary:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+        }
+        .loader-card .retry-area .btn-sm-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .loader-card .retry-area .btn-sm-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(167, 139, 250, 0.4);
+            color: #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 14px 28px;
+            border-radius: 16px;
+            background: rgba(30, 27, 58, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 0.9rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .toast.success {
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+        .toast.success i {
+            color: #34d399;
+        }
+        .toast.error {
+            border-color: rgba(248, 113, 113, 0.3);
+        }
+        .toast.error i {
+            color: #f87171;
+        }
+        .toast.info {
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+        .toast.info i {
+            color: #60a5fa;
+        }
+        .toast.warning {
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+        .toast.warning i {
+            color: #fbbf24;
+        }
+
+        @media (max-width: 540px) {
+            .transfer-card {
+                padding: 24px 18px 28px;
+                border-radius: 32px;
+            }
+            .title {
+                font-size: 22px;
+            }
+            .balance-box {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .title {
+                font-size: 18px;
+            }
+            .user-info {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="transfer-card" id="mainWrapper">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="title"><i class="fas fa-paper-plane"></i> Transfer</div>
+            <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+
+        <!-- ─── STATUS / LOADER ─── -->
+        <div id="statusCard" class="loader-card">
+            <span class="status-icon" id="statusIcon"><i class="fas fa-database"></i></span>
+            <div class="status-title" id="statusTitle">Connecting…</div>
+            <div class="status-desc" id="statusDesc">Loading your account data.</div>
+            <div class="status-detail" id="statusDetail"></div>
+            <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+            <div class="retry-area" id="retryArea" style="display:none;">
+                <button class="btn-sm btn-sm-primary" id="retryBtn"><i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry</button>
+            </div>
+        </div>
+
+        <!-- ─── MAIN CONTENT ─── -->
+        <div id="mainContent" class="hidden">
+
+            <!-- User info + balance -->
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <div class="user-details">
+                    <div class="name" id="userName">John Doe</div>
+                    <div class="email" id="userEmail">john@example.com</div>
+                </div>
+                <div class="balance-box">
+                    <div class="label">BALANCE</div>
+                    <span id="userBalance">PHP0.00</span>
+                </div>
+            </div>
+
+            <!-- Transfer Form -->
+            <form id="transferForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Recipient Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input type="text" id="recipientUsername" placeholder="Enter username" required autocomplete="off" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-coins"></i> Amount (PHP)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-peso-sign"></i>
+                        <input type="number" id="transferAmount" placeholder="0.00" min="0.01" step="0.01" required />
+                    </div>
+                </div>
+
+                <div id="messageBox" class="message-box"></div>
+
+                <button type="submit" class="btn-primary" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+                <button type="button" class="btn-secondary" id="clearBtn">Clear</button>
+            </form>
+
+            <!-- Optional: link to dashboard -->
+            <div style="margin-top:16px; text-align:center; color:rgba(255,255,255,0.2); font-size:0.75rem;">
+                <i class="fas fa-shield-alt"></i> Secure &bull; Instant
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Success</span></div>
+
+    <script>
+        // ============================================================
+        //  SECURITY
+        // ============================================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12') { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+        });
+
+        // ============================================================
+        //  CONSTANTS – GitHub
+        // ============================================================
+        const ENCRYPTION_KEY_HASH = '$2a$12$tLvlRpTmRlBdGSUBZ8.phe4dOfl09CcFEp2cjG.U8lpPKvtwku5N6';
+        const GITHUB_OWNER = 'tcute6851';
+        const GITHUB_REPO = 'Arvroyal-Casino-Games';
+        const GITHUB_PATH = 'CasinoDB.json';
+        const GITHUB_TOKEN_KEY = 'github_pat';
+
+        let dbData = { users: [] };
+        let currentUser = null;
+        let _githubSha = null;
+        let _defaultBranch = 'main';
+
+        // ---- DOM refs ----
+        const statusCard = document.getElementById('statusCard');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDesc = document.getElementById('statusDesc');
+        const statusDetail = document.getElementById('statusDetail');
+        const progressFill = document.getElementById('progressFill');
+        const retryArea = document.getElementById('retryArea');
+        const retryBtn = document.getElementById('retryBtn');
+        const mainContent = document.getElementById('mainContent');
+        const transferForm = document.getElementById('transferForm');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const backBtn = document.getElementById('backBtn');
+        const messageBox = document.getElementById('messageBox');
+
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userBalance = document.getElementById('userBalance');
+        const recipientInput = document.getElementById('recipientUsername');
+        const amountInput = document.getElementById('transferAmount');
+
+        // ============================================================
+        //  CRYPTO HELPERS
+        // ============================================================
+        async function deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+            return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+            );
+        }
+
+        async function encryptData(plaintext) {
+            const enc = new TextEncoder();
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, enc.encode(plaintext));
+            const parts = [
+                btoa(String.fromCharCode(...salt)),
+                btoa(String.fromCharCode(...iv)),
+                btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+            ];
+            return parts.join(':');
+        }
+
+        async function decryptData(encryptedString) {
+            const parts = encryptedString.split(':');
+            if (parts.length !== 3) throw new Error('Invalid encrypted format');
+            const salt = Uint8Array.from(atob(parts[0]), c => c.charCodeAt(0));
+            const iv = Uint8Array.from(atob(parts[1]), c => c.charCodeAt(0));
+            const ciphertext = Uint8Array.from(atob(parts[2]), c => c.charCodeAt(0));
+            const key = await deriveKey(ENCRYPTION_KEY_HASH, salt);
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ciphertext);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        // ============================================================
+        //  GITHUB HELPERS
+        // ============================================================
+        function getGitHubToken() {
+            let token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                token = prompt('🔑 Enter your GitHub Personal Access Token (with repo scope):');
+                if (token) {
+                    localStorage.setItem(GITHUB_TOKEN_KEY, token);
+                }
+            }
+            return token;
+        }
+
+        function clearToken() {
+            localStorage.removeItem(GITHUB_TOKEN_KEY);
+        }
+
+        async function detectDefaultBranch(token) {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}`;
+                const resp = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    return data.default_branch || 'main';
+                }
+            } catch {}
+            return 'main';
+        }
+
+        async function createEmptyDatabase(token, branch) {
+            const emptyData = { users: [] };
+            const json = JSON.stringify(emptyData, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Initialize CasinoDB.json',
+                    content: content,
+                    branch: branch
+                })
+            });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`GitHub API error (${response.status}): ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+        }
+
+        async function loadDatabase(showToastMsg = true) {
+            let token = getGitHubToken();
+            if (!token) {
+                updateStatus('❌', '❌', 'Token Required', 'Please enter your GitHub token to continue.', 'Click "Retry" to try again.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('GitHub token required.', 'error');
+                showUI(false);
+                return false;
+            }
+
+            try {
+                updateStatus('spinning', '📡', 'Connecting to GitHub…', 'Fetching database from repository…');
+                setProgress(20);
+
+                const branch = await detectDefaultBranch(token);
+                _defaultBranch = branch;
+
+                setProgress(40);
+
+                const url =
+                    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.status === 404) {
+                    updateStatus('spinning', '📝', 'Creating database…', 'No database found. Creating new one…');
+                    setProgress(60);
+                    await createEmptyDatabase(token, branch);
+                    dbData = { users: [] };
+                    setProgress(100);
+                    if (showToastMsg) showToast('✅ New database created on GitHub!', 'success');
+                    showUI(true);
+                    await checkSession();
+                    return true;
+                }
+
+                if (response.status === 401) {
+                    clearToken();
+                    updateStatus('❌', '❌', 'Invalid Token', 'Your GitHub token is invalid or expired.', 'Click "Retry" to enter a new token.');
+                    showRetryButtons(true);
+                    if (showToastMsg) showToast('Invalid GitHub token. Please try again.', 'error');
+                    showUI(false);
+                    return false;
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const msg = errorData.message || response.statusText;
+                    throw new Error(`GitHub API error (${response.status}): ${msg}`);
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                _githubSha = data.sha;
+
+                let json;
+                try {
+                    const decrypted = await decryptData(content);
+                    json = JSON.parse(decrypted);
+                } catch {
+                    json = JSON.parse(content);
+                }
+                dbData = json;
+                setProgress(100);
+                if (showToastMsg) showToast('✅ Your access granted is successful!', 'success');
+                showUI(true);
+                await checkSession();
+                return true;
+            } catch (error) {
+                console.error('loadDatabase error:', error);
+                const errorMsg = error.message || 'Could not connect to GitHub.';
+                updateStatus('❌', '❌', 'Loading Failed', errorMsg, 'Check your internet connection and token.');
+                showRetryButtons(true);
+                if (showToastMsg) showToast('Failed to load database: ' + errorMsg, 'error');
+                showUI(false);
+                return false;
+            }
+        }
+
+        async function saveDatabase(data) {
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                showToast('No GitHub token found.', 'error');
+                return;
+            }
+
+            const json = JSON.stringify(data, null, 2);
+            const encrypted = await encryptData(json);
+            const content = btoa(encrypted);
+
+            const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_PATH}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify({
+                    message: 'Update CasinoDB.json',
+                    content: content,
+                    sha: _githubSha,
+                    branch: _defaultBranch
+                })
+            });
+
+            if (response.status === 401) {
+                clearToken();
+                showToast('GitHub token expired. Please refresh and enter a new token.', 'error');
+                return;
+            }
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const msg = errorData.message || response.statusText;
+                throw new Error(`Failed to save: ${msg}`);
+            }
+            const result = await response.json();
+            _githubSha = result.content.sha;
+            console.log('✅ Database saved to GitHub');
+        }
+
+        // ============================================================
+        //  UI HELPERS
+        // ============================================================
+        function updateStatus(iconType, iconHtml, title, desc, detail = '') {
+            if (iconType === 'spinning') {
+                statusIcon.className = 'status-icon spinning';
+                statusIcon.innerHTML = iconHtml;
+            } else {
+                statusIcon.className = 'status-icon';
+                statusIcon.innerHTML = iconHtml;
+            }
+            statusTitle.textContent = title;
+            statusDesc.textContent = desc;
+            statusDetail.textContent = detail;
+        }
+
+        function setProgress(pct) {
+            progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+        }
+
+        function showRetryButtons(show = true) {
+            retryArea.style.display = show ? 'flex' : 'none';
+        }
+
+        function showUI(hasFile) {
+            if (hasFile) {
+                statusCard.style.display = 'none';
+                mainContent.classList.remove('hidden');
+            } else {
+                statusCard.style.display = 'flex';
+                mainContent.classList.add('hidden');
+            }
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            const m = document.getElementById('toastMessage');
+            const icon = t.querySelector('i');
+            t.className = 'toast ' + type;
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            icon.className = icons[type] || icons.info;
+            m.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        function showMessage(text, type = 'info') {
+            messageBox.textContent = text;
+            messageBox.className = 'message-box show ' + type;
+        }
+
+        function hideMessage() {
+            messageBox.className = 'message-box';
+            messageBox.textContent = '';
+        }
+
+        function formatCurrency(amount) {
+            return 'PHP' + (amount || 0).toFixed(2);
+        }
+
+        function getInitials(name) {
+            if (!name) return 'U';
+            return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        // ============================================================
+        //  SESSION CHECK
+        // ============================================================
+        function checkSession() {
+            const saved = sessionStorage.getItem('auth_user');
+            if (!saved) {
+                showToast('Please log in first.', 'error');
+                setTimeout(() => { window.location.href = 'login.html'; }, 500);
+                return false;
+            }
+            try {
+                const user = JSON.parse(saved);
+                const exists = dbData.users.find(u => u.id === user.id);
+                if (exists) {
+                    if (exists.balance === undefined) exists.balance = 0;
+                    currentUser = exists;
+                    renderUser();
+                    return true;
+                } else {
+                    sessionStorage.removeItem('auth_user');
+                    showToast('Session invalid. Please log in again.', 'error');
+                    setTimeout(() => { window.location.href = 'login.html'; }, 500);
+                    return false;
+                }
+            } catch {
+                sessionStorage.removeItem('auth_user');
+                showToast('Session error. Please log in again.', 'error');
+                setTimeout(() => { window.location.href = 'login.html'; }, 500);
+                return false;
+            }
+        }
+
+        function renderUser() {
+            if (!currentUser) return;
+            userAvatar.textContent = getInitials(currentUser.name);
+            userName.textContent = currentUser.name;
+            userEmail.textContent = currentUser.email || 'user@casino.io';
+            userBalance.textContent = formatCurrency(currentUser.balance);
+        }
+
+        // ============================================================
+        //  TRANSFER LOGIC
+        // ============================================================
+        transferForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            hideMessage();
+
+            if (!currentUser) {
+                showMessage('You must be logged in.', 'error');
+                return;
+            }
+
+            const recipientUsername = recipientInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+
+            if (!recipientUsername) {
+                showMessage('Please enter a recipient username.', 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showMessage('Please enter a valid amount greater than 0.', 'error');
+                return;
+            }
+
+            // Check if sending to self
+            if (recipientUsername === currentUser.username) {
+                showMessage('You cannot send funds to yourself.', 'error');
+                return;
+            }
+
+            // Find recipient
+            const recipient = dbData.users.find(u => u.username === recipientUsername);
+            if (!recipient) {
+                showMessage('User not found. Please check the username.', 'error');
+                return;
+            }
+
+            // Check sender balance
+            if (currentUser.balance < amount) {
+                showMessage('Insufficient balance. You have ' + formatCurrency(currentUser.balance), 'error');
+                return;
+            }
+
+            // Perform transfer
+            const sender = currentUser;
+            sender.balance -= amount;
+            recipient.balance = (recipient.balance || 0) + amount;
+
+            try {
+                // Update dbData
+                const senderIndex = dbData.users.findIndex(u => u.id === sender.id);
+                const recipientIndex = dbData.users.findIndex(u => u.id === recipient.id);
+                if (senderIndex > -1) dbData.users[senderIndex] = sender;
+                if (recipientIndex > -1) dbData.users[recipientIndex] = recipient;
+
+                await saveDatabase(dbData);
+
+                // Update current user reference
+                currentUser = sender;
+                renderUser();
+                showMessage(`✅ Successfully sent ${formatCurrency(amount)} to @${recipient.username}`, 'success');
+                showToast(`Transfer of ${formatCurrency(amount)} to ${recipient.username} completed!`, 'success');
+
+                // Clear fields
+                recipientInput.value = '';
+                amountInput.value = '';
+            } catch (err) {
+                showMessage('Transfer failed: ' + err.message, 'error');
+                showToast('Transfer failed: ' + err.message, 'error');
+                // Revert local changes
+                sender.balance += amount;
+                recipient.balance -= amount;
+                renderUser();
+            }
+        });
+
+        // ---- Clear button ----
+        clearBtn.addEventListener('click', () => {
+            recipientInput.value = '';
+            amountInput.value = '';
+            hideMessage();
+        });
+
+        // ---- Back button ----
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
+
+        // ---- Retry button ----
+        retryBtn.addEventListener('click', async function() {
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying…';
+            clearToken();
+            const success = await loadDatabase(true);
+            if (!success) {
+                showRetryButtons(true);
+            }
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-sync-alt" style="margin-right:6px;"></i>Retry';
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        (async function init() {
+            showUI(false);
+            updateStatus('spinning', '📡', 'Connecting to Web app…', 'Loading database from repository…');
+            setProgress(10);
+
+            const token = localStorage.getItem(GITHUB_TOKEN_KEY);
+            if (!token) {
+                updateStatus('🔑', '🔑', 'Web app Password Required', 'Please enter your Web app password for security purposes.',
+                    'Click "Retry" to enter your password.');
+                showRetryButtons(true);
+                showToast('Web app Password Required.', 'info');
+            } else {
+                const success = await loadDatabase(true);
+                if (!success) {
+                    showRetryButtons(true);
+                }
+            }
+        })();
+
+        console.log('💸 Balance Transfer page initialized (PHP currency).');
+    </script>
+
+</body>
+</html>
